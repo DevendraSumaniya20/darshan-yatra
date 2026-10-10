@@ -1,0 +1,17 @@
+.yatra-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+}
+
+.yatra-facts dt {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.yatra-facts dd {
+  font-size: var(--step-1);
+  font-stretch: 85%;
+  font-weight: 750;
+  line-height: 1.2;
+}

@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T06:36:44.244Z",
+  "title": "Design System: Darshan Yatra",
+  "extensions": {
+    "colorMeta": {
+      "chrome-yellow": {
+        "role": "primary",
+        "displayName": "Chrome Yellow",
+        "canonical": "#f7c81e"
+      },
+      "vermilion": {
+        "role": "primary",
+        "displayName": "Vermilion",
+        "canonical": "#d8281b"
+      },
+      "ultramarine": {
+        "role": "secondary",
+        "displayName": "Ultramarine",
+        "canonical": "#1b2f8f"
+      },
+      "bottle-green": {
+        "role": "tertiary",
+        "displayName": "Bottle Green",
+        "canonical": "#0e6b3b"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#000000"
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "#2b3350"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff"
+      },
+      "pale-yellow": {
+        "role": "neutral",
+        "displayName": "Pale Yellow",
+        "canonical": "#fff3bf"
+      },
+      "paper-edge": {
+        "role": "neutral",
+        "displayName": "Paper Edge",
+        "canonical": "#c9cbd6"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Sign lettering",
+        "purpose": "Names only: site, page, yatra, circuit."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Sub-headings and key figures."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text, max 66ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, hints, fact names."
+      },
+      "numeral": {
+        "displayName": "Pad numeral",
+        "purpose": "The day on a date sheet and step numbers."
+      }
+    },
+    "shadows": [
+      {
+        "name": "pad-stack",
+        "value": "0 3px 0 -1px #fff, 0 3px 0 0 #c9cbd6, 0 6px 0 -1px #fff, 0 6px 0 0 #c9cbd6, 0 14px 18px -8px rgb(19 33 107 / 0.45)",
+        "purpose": "Date sheets only: the edges of the sheets beneath and a short cast shadow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All transitions and the pad settle."
+      },
+      {
+        "name": "quick",
+        "value": "140ms",
+        "purpose": "Hover and selection feedback."
+      },
+      {
+        "name": "pad-settle",
+        "value": "900ms, 70ms stagger",
+        "purpose": "Home page only: date sheets swing to rest once on load. Off under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "medium",
+        "value": "48rem"
+      },
+      {
+        "name": "wide",
+        "value": "64rem"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main action on a page or form.",
+      "html": "<button class=\"ds-btn\">Send booking request</button>",
+      "css": ".ds-btn{min-height:2.75rem;padding:.5rem 1.5rem;border:2px solid var(--red-deep);border-radius:2px;background:var(--red);color:var(--paper);font:inherit;font-weight:700;cursor:pointer}.ds-btn:hover{background:var(--red-deep)}.ds-btn:focus-visible{outline:3px solid var(--blue);outline-offset:3px}"
+    },
+    {
+      "name": "Plain button",
+      "kind": "button",
+      "refersTo": "button-plain",
+      "description": "Secondary actions such as Try again and Clear filters.",
+      "html": "<button class=\"ds-btn-plain\">Clear filters</button>",
+      "css": ".ds-btn-plain{min-height:2.75rem;padding:.5rem 1.5rem;border:2px solid var(--blue);border-radius:2px;background:var(--paper);color:var(--blue);font:inherit;font-weight:700;cursor:pointer}.ds-btn-plain:hover{background:var(--blue);color:var(--paper)}.ds-btn-plain:focus-visible{outline:3px solid var(--blue);outline-offset:3px}"
+    },
+    {
+      "name": "Date sheet",
+      "kind": "custom",
+      "refersTo": "date-sheet",
+      "description": "One departure as a tear-off pad sheet.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-sheet-month\">Nov 2026</div><div class=\"ds-sheet-day\">13</div><div class=\"ds-sheet-week\">Friday</div><div class=\"ds-sheet-body\"><b>12 seats left</b><span>₹9,800</span></div></div>",
+      "css": ".ds-sheet{width:9.5rem;border-radius:2px;background:var(--paper);text-align:center;box-shadow:var(--pad-stack)}.ds-sheet::before{content:\"\";display:block;height:.875rem;background:radial-gradient(circle,var(--yellow) 0 2px,transparent 2.5px) center/.875rem 100% repeat-x,var(--blue)}.ds-sheet-month{padding:.25rem;background:var(--red);color:var(--paper);font-weight:700}.ds-sheet-day{color:var(--red);font-size:3.5rem;font-stretch:75%;font-weight:800;line-height:1}.ds-sheet-week{font-weight:650;padding-bottom:.5rem}.ds-sheet-body{display:grid;gap:.25rem;padding:.75rem;border-top:2px dashed var(--paper-edge)}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "field-control",
+      "description": "Label above, hint, control, then error.",
+      "html": "<label class=\"ds-field\"><span>Mobile number</span><input class=\"ds-input\" type=\"tel\"></label>",
+      "css": ".ds-field{display:grid;gap:.25rem;font-weight:650}.ds-input{min-height:2.75rem;padding:.5rem .75rem;border:2px solid var(--ink);border-radius:2px;background:var(--paper);font:inherit}.ds-input:focus-visible{outline:3px solid var(--blue);outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The trade calendar with a live date pad",
+    "overview": "The site borrows the printed wall calendar that Indian shops give their customers: a bright picture plate inside a printed frame, the name in a band, and a pad of tear-off date sheets. Each departure is a sheet, and the date is the largest thing on any page. Colour is flat print ink at page scale; names are set in sign lettering and everything functional in a sturdy text face.",
+    "keyCharacteristics": [
+      "The date sheet is the signature object",
+      "Flat inks, square corners, ruled lines",
+      "Sign lettering for names only",
+      "One column grid shared by every page"
+    ],
+    "rules": [
+      {
+        "name": "The Plate Rule",
+        "body": "Yellow owns whole regions or none.",
+        "section": "colors"
+      },
+      {
+        "name": "The Words-Too Rule",
+        "body": "No state is carried by colour alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Signboard Rule",
+        "body": "Sign lettering is for names; never a sentence, label or number.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "No all-caps anywhere.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper-Only Rule",
+        "body": "Only date sheets cast a shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Show a departure as a date sheet whenever there is room",
+      "Put date, seats left and price before any description",
+      "Divide lists with rules",
+      "State effort in numbers"
+    ],
+    "donts": [
+      "No gradients, blur, glow or soft cards",
+      "No shadow on anything but a date sheet",
+      "No all-caps, eyebrow labels or arrows after links",
+      "No invented photographs, testimonials or ratings",
+      "No deities or sacred symbols as decoration"
+    ]
+  }
+}

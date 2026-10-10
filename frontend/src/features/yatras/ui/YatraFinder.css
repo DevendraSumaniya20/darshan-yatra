@@ -1,0 +1,30 @@
+.yatra-finder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: end;
+}
+
+.yatra-finder .field__control {
+  min-height: 3.25rem;
+}
+
+@media (min-width: 48rem) {
+  .yatra-finder {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .yatra-finder > :first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 64rem) {
+  .yatra-finder {
+    grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto;
+  }
+
+  .yatra-finder > :first-child {
+    grid-column: auto;
+  }
+}

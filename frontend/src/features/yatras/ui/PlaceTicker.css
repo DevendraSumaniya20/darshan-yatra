@@ -1,0 +1,37 @@
+.place-ticker {
+  overflow: hidden;
+  border-block: var(--frame) solid var(--red);
+  background: var(--yellow);
+}
+
+.place-ticker__track {
+  display: flex;
+  width: max-content;
+}
+
+.place-ticker__group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.place-ticker__group > li {
+  display: flex;
+  align-items: center;
+  padding-block: var(--space-3);
+  color: var(--blue);
+  font-family: var(--font-sign);
+  font-size: var(--step-2);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* A printer's diamond between names. */
+.place-ticker__group > li::after {
+  content: '';
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-inline: var(--space-5);
+  background: var(--red);
+  rotate: 45deg;
+}

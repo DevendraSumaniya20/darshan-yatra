@@ -23,3 +23,8 @@ npm-debug.log*
 
 # Test coverage
 coverage/
+# Design tooling working files
+.impeccable/questions/
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/build/

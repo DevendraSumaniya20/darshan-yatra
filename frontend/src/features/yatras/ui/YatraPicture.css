@@ -1,0 +1,8 @@
+/* Fills its frame; the frame sets the shape. */
+.yatra-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--yellow-pale);
+}

@@ -1,0 +1,106 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Yatra {
+  id               String  @id @db.VarChar(96)
+  slug             String  @unique @db.VarChar(96)
+  name             String  @db.VarChar(160)
+  circuit          String  @db.VarChar(32)
+  summary          String  @db.Text
+  durationDays     Int
+  startCity        String  @db.VarChar(64)
+  endCity          String  @db.VarChar(64)
+  difficulty       String  @db.VarChar(16)
+  maxAltitudeM     Int?
+  walkingKm        Int
+  basePricePaise   Int
+  seasonStartMonth Int     @db.TinyInt
+  seasonEndMonth   Int     @db.TinyInt
+  places           Json
+  inclusions       Json
+  exclusions       Json
+  photoPath        String? @db.VarChar(255)
+  photoAlt         String? @db.VarChar(255)
+  photoCredit      String? @db.VarChar(255)
+  photoSourceUrl   String? @db.VarChar(512)
+
+  itinerary  ItineraryDay[]
+  gallery    GalleryPhoto[]
+  departures Departure[]
+
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+
+  @@index([circuit])
+  @@index([startCity])
+}
+
+model ItineraryDay {
+  id          Int     @id @default(autoincrement())
+  yatraId     String  @db.VarChar(96)
+  day         Int
+  title       String  @db.VarChar(160)
+  description String  @db.Text
+  overnight   String? @db.VarChar(64)
+
+  yatra Yatra @relation(fields: [yatraId], references: [id], onDelete: Cascade)
+
+  @@unique([yatraId, day])
+}
+
+model GalleryPhoto {
+  id        Int    @id @default(autoincrement())
+  yatraId   String @db.VarChar(96)
+  position  Int
+  path      String @db.VarChar(255)
+  alt       String @db.VarChar(255)
+  caption   String @db.VarChar(120)
+  credit    String @db.VarChar(255)
+  sourceUrl String @db.VarChar(512)
+
+  yatra Yatra @relation(fields: [yatraId], references: [id], onDelete: Cascade)
+
+  @@unique([yatraId, position])
+}
+
+model Departure {
+  id          String   @id @db.VarChar(128)
+  yatraId     String   @db.VarChar(96)
+  startDate   DateTime @db.Date
+  seatsTotal  Int
+  seatsBooked Int      @default(0)
+  pricePaise  Int
+
+  yatra    Yatra            @relation(fields: [yatraId], references: [id], onDelete: Cascade)
+  bookings BookingRequest[]
+
+  @@index([yatraId, startDate])
+  @@index([startDate])
+}
+
+model BookingRequest {
+  id          String   @id @db.VarChar(36)
+  reference   String   @unique @db.VarChar(12)
+  departureId String   @db.VarChar(128)
+  contactName String   @db.VarChar(120)
+  phone       String   @db.VarChar(16)
+  email       String?  @db.VarChar(190)
+  travellers  Int
+  note        String?  @db.Text
+  status      String   @default("pending") @db.VarChar(16)
+  totalPaise  Int
+  createdAt   DateTime @db.DateTime(3)
+
+  departure Departure @relation(fields: [departureId], references: [id], onDelete: Restrict)
+
+  @@index([departureId])
+  @@index([phone])
+}

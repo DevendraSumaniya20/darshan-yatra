@@ -1,0 +1,88 @@
+.questions {
+  padding-block: var(--space-8);
+  border-top: var(--frame) solid var(--blue);
+}
+
+.questions__title,
+.questions__list {
+  grid-column: 1 / -1;
+}
+
+.questions__title {
+  margin-bottom: var(--space-5);
+}
+
+.questions__list {
+  border-top: var(--rule) solid var(--red);
+}
+
+.questions__item {
+  border-bottom: var(--rule) solid var(--red);
+}
+
+.questions__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 3.75rem;
+  padding-block: var(--space-3);
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+  list-style: none;
+  cursor: pointer;
+}
+
+.questions__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.questions__item summary:hover {
+  color: var(--blue);
+}
+
+/* A plus drawn from two bars; the upright bar is dropped when the answer is open. */
+.questions__item summary::after {
+  content: '';
+  flex: none;
+  width: var(--space-5);
+  height: var(--space-5);
+  background:
+    linear-gradient(var(--red), var(--red)) center / 100% var(--frame-thin) no-repeat,
+    linear-gradient(var(--red), var(--red)) center / var(--frame-thin) 100% no-repeat;
+}
+
+.questions__item[open] summary::after {
+  background: linear-gradient(var(--red), var(--red)) center / 100% var(--frame-thin) no-repeat;
+}
+
+.questions__item > p,
+.questions__levels {
+  padding-bottom: var(--space-5);
+}
+
+.questions__item > p:not(:last-child) {
+  padding-bottom: var(--space-3);
+}
+
+.questions__levels {
+  display: grid;
+  gap: var(--space-2);
+  max-width: var(--measure);
+}
+
+.questions__levels dt {
+  font-weight: 700;
+}
+
+@media (min-width: 48rem) {
+  .questions__title {
+    grid-column: span 4;
+    margin-bottom: 0;
+  }
+
+  .questions__list {
+    grid-column: span 8;
+  }
+}

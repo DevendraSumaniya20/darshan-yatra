@@ -1,0 +1,29 @@
+.yatra-search {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.yatra-search__label {
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+}
+
+.yatra-search__row {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* The largest control on the page: most people arrive knowing the place they want. */
+.yatra-search__input {
+  min-height: 3.25rem;
+  padding-inline: var(--space-4);
+  border-width: var(--frame-thin);
+  font-size: var(--step-1);
+}
+
+@media (min-width: 48rem) {
+  .yatra-search__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}

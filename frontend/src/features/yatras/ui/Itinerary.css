@@ -1,0 +1,52 @@
+.itinerary {
+  --marker: 2.75rem;
+  position: relative;
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* One unbroken thread from the first day to the last. */
+.itinerary::before {
+  content: '';
+  position: absolute;
+  inset-block: calc(var(--marker) / 2);
+  left: calc(var(--marker) / 2 - 1.5px);
+  width: 3px;
+  background: var(--red);
+  /* Drawn from the top by the scroll animation; fully drawn without it. */
+  transform-origin: 50% 0;
+  scale: 1 var(--thread, 1);
+}
+
+.itinerary__day {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--marker) 1fr;
+  column-gap: var(--space-4);
+  align-items: start;
+}
+
+.itinerary__number {
+  display: grid;
+  place-items: center;
+  width: var(--marker);
+  height: var(--marker);
+  border: 3px solid var(--red);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--red);
+  font-size: var(--step-1);
+  font-stretch: 80%;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.itinerary__day h3 {
+  margin-block: var(--space-2) var(--space-1);
+}
+
+.itinerary__night {
+  margin-top: var(--space-1);
+  color: var(--ink-soft);
+  font-weight: 650;
+}

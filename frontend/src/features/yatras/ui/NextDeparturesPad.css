@@ -1,0 +1,76 @@
+/* On phones the pad is a row to swipe; from the wide breakpoint all four sheets hang side by side. */
+.next-pad {
+  display: flex;
+  gap: var(--space-4);
+  margin-inline: calc(-1 * var(--gutter));
+  padding: var(--space-2) var(--gutter) var(--space-6);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-color: var(--yellow) transparent;
+}
+
+.next-pad > li {
+  display: grid;
+  flex: 0 0 min(15rem, 72vw);
+  scroll-snap-align: start;
+}
+
+@media (min-width: 64rem) {
+  .next-pad {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gutter);
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+  }
+}
+
+.next-pad__sheet {
+  display: grid;
+  color: var(--ink);
+  text-decoration: none;
+  transform-origin: 50% 0;
+  transition:
+    rotate 320ms var(--ease-out),
+    translate 320ms var(--ease-out);
+}
+
+/* A sheet lifts and swings a little when picked up. */
+.next-pad__sheet:hover {
+  color: var(--ink);
+  rotate: -1.6deg;
+  translate: 0 -5px;
+}
+
+.next-pad__sheet:focus-visible {
+  outline-color: var(--yellow);
+  outline-offset: 5px;
+}
+
+.next-pad__sheet:hover .next-pad__name {
+  color: var(--red-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.next-pad__name {
+  color: var(--blue);
+  font-size: var(--step-1);
+  font-stretch: 85%;
+  font-weight: 750;
+  line-height: var(--leading-snug);
+}
+
+.next-pad__seats {
+  font-weight: 700;
+}
+
+.next-pad__empty {
+  padding: var(--space-5);
+  border: var(--rule) solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+}

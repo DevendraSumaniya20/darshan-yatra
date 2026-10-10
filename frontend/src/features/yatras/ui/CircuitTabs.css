@@ -1,0 +1,93 @@
+.circuit-tabs > ul {
+  display: flex;
+  gap: var(--space-3);
+  margin-inline: calc(-1 * var(--gutter));
+  padding: var(--space-2) var(--gutter) var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-color: var(--blue) transparent;
+}
+
+.circuit-tabs li {
+  display: grid;
+  flex: 0 0 9.5rem;
+  scroll-snap-align: start;
+}
+
+.circuit-tabs__tab {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border: 3px solid var(--ink);
+  border-radius: var(--corner);
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: translate var(--quick) var(--ease-out);
+}
+
+.circuit-tabs__tab:hover {
+  color: var(--ink);
+  translate: 0 -3px;
+}
+
+.circuit-tabs__picture {
+  display: block;
+  aspect-ratio: 400 / 260;
+  border-bottom: 3px solid var(--ink);
+}
+
+.circuit-tabs__name {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: var(--space-2) var(--space-3);
+}
+
+/* "All circuits" has no picture; it is a solid ink tile the same size as the others. */
+.circuit-tabs__tab--all {
+  grid-template-rows: 1fr;
+  background: var(--blue);
+  color: var(--paper);
+}
+
+.circuit-tabs__tab--all:hover {
+  color: var(--yellow);
+}
+
+.circuit-tabs__tab--all .circuit-tabs__name {
+  align-items: end;
+  font-family: var(--font-sign);
+  font-size: var(--step-1);
+  font-weight: 400;
+}
+
+/* The current circuit: a heavy vermilion frame and an inked name band. */
+.circuit-tabs__tab[aria-current='true'] {
+  border-color: var(--red);
+  outline: 3px solid var(--red);
+}
+
+.circuit-tabs__tab[aria-current='true'] .circuit-tabs__name {
+  background: var(--red);
+  color: var(--paper);
+}
+
+.circuit-tabs__tab--all[aria-current='true'] .circuit-tabs__name {
+  background: none;
+  color: var(--yellow);
+}
+
+@media (min-width: 64rem) {
+  .circuit-tabs > ul {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-4);
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+  }
+}

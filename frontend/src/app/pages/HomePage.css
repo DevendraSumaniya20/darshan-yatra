@@ -1,0 +1,187 @@
+/* The picture plate of the calendar: a yellow field inside a printed double frame. */
+.hero {
+  padding: var(--space-3);
+  background: var(--yellow);
+}
+
+.hero__plate {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  border: var(--frame) solid var(--red);
+  outline: var(--rule) solid var(--blue);
+  outline-offset: calc(-1 * (var(--frame) + var(--space-2)));
+}
+
+.hero__copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+  padding-block: var(--space-7) var(--space-5);
+}
+
+.hero__title {
+  max-width: 11ch;
+  font-size: var(--step-6);
+  line-height: 1;
+}
+
+.hero__word {
+  display: inline-block;
+  white-space: pre;
+}
+
+.hero__lede {
+  max-width: 34ch;
+  font-weight: 500;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.hero__art {
+  display: block;
+  width: 100%;
+  height: clamp(9rem, 34vw, 24rem);
+}
+
+@media (min-width: 64rem) {
+  .hero {
+    padding: var(--space-4);
+  }
+
+  .hero__copy {
+    padding-block: var(--space-8) var(--space-4);
+  }
+
+  .hero__title {
+    max-width: 14ch;
+  }
+}
+
+/* The counter under the picture, where a traveller says where and when. */
+.finder {
+  padding-block: var(--space-5);
+  border-top: var(--frame) solid var(--red);
+  background: var(--yellow-pale);
+}
+
+/* The circuits sit on the pale plate so the card rows above and the red band below stay apart. */
+.circuits {
+  background: var(--yellow-pale);
+}
+
+/* The date pad hangs on an ultramarine wall under the picture. */
+.leaving {
+  padding-block: var(--space-7) var(--space-6);
+  background: var(--blue);
+  color: var(--paper);
+}
+
+.leaving__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.leaving__title {
+  color: var(--yellow);
+  font-family: var(--font-sign);
+  font-size: var(--step-4);
+  font-stretch: 100%;
+  font-weight: 400;
+}
+
+.leaving__all {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.leaving__all:hover {
+  color: var(--yellow);
+}
+
+.leaving :focus-visible {
+  outline-color: var(--yellow);
+}
+
+.leaving .loading-notice {
+  color: var(--paper);
+}
+
+/* A real sequence, so the steps are numbered: numerals borrowed from the date pad. */
+.how-it-works {
+  background: var(--red);
+  color: var(--paper);
+}
+
+.how-it-works :focus-visible {
+  outline-color: var(--yellow);
+}
+
+.how-it-works__steps {
+  counter-reset: step;
+  row-gap: var(--space-6);
+}
+
+.how-it-works__steps > li {
+  grid-column: 1 / -1;
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--space-4);
+  align-items: start;
+}
+
+.how-it-works__steps > li::before {
+  content: counter(step);
+  grid-row: span 2;
+  min-width: 1ch;
+  color: var(--yellow);
+  font-size: 6rem;
+  font-stretch: 75%;
+  font-weight: 800;
+  line-height: 0.85;
+}
+
+.how-it-works__steps h3 {
+  margin-bottom: var(--space-1);
+}
+
+@media (min-width: 48rem) {
+  .how-it-works__steps > li {
+    grid-column: span 4;
+  }
+}
+
+.before-you-choose {
+  row-gap: var(--space-6);
+}
+
+.before-you-choose > div {
+  grid-column: 1 / -1;
+  padding-top: var(--space-4);
+  border-top: var(--rule) solid var(--blue);
+}
+
+.before-you-choose h3 {
+  margin-bottom: var(--space-2);
+}
+
+@media (min-width: 48rem) {
+  .before-you-choose > div {
+    grid-column: span 4;
+  }
+}

@@ -1,0 +1,662 @@
+import { isoDate } from '../../domain/shared/iso-date.ts';
+import { rupees } from '../../domain/shared/paise.ts';
+import type { DepartureId, DepartureProps } from '../../domain/yatra/departure.ts';
+import type {
+  GalleryPhoto,
+  ItineraryDay,
+  Yatra,
+  YatraId,
+  YatraPhoto,
+} from '../../domain/yatra/yatra.ts';
+
+/**
+ * Illustrative catalogue used by the in-memory data source and by `prisma/seed.ts`.
+ * Place names, distances, altitudes and seasons are real; prices and dates are sample data.
+ * Photographs are from Wikimedia Commons under the licence named in each credit; the files
+ * are in `backend/media/photos/` and are served by the API under `/media`.
+ */
+
+type SeedDeparture = { date: string; seats: number; booked: number; priceInr?: number };
+
+type SeedYatra = Omit<Yatra, 'id' | 'basePrice' | 'itinerary' | 'gallery'> & {
+  gallery?: readonly GalleryPhoto[];
+  priceInr: number;
+  days: ReadonlyArray<[title: string, description: string, overnight: string | null]>;
+  departures: readonly SeedDeparture[];
+};
+
+const STANDARD_EXCLUSIONS = [
+  'Travel to the start city and back from the end city',
+  'Lunch on travel days',
+  'Personal expenses, tips and offerings',
+  'Travel insurance',
+];
+
+/** Photographs of single places, shared by the yatras that visit them. */
+const PLACE_PHOTOS = {
+  dwarkadhish: {
+    path: '/media/photos/places/dwarkadhish-temple.jpg',
+    alt: 'The carved spire of Dwarkadhish temple with its flag flying from the top',
+    caption: 'Dwarkadhish temple, Dwarka',
+    credit: 'Madhuranthakan Jagadeesan, CC BY-SA 4.0',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:N-GJ-126_Dwarkadhish_Temple,_Dwarka_Flag_Hoisting.jpg',
+  },
+  gomtiSangam: {
+    path: '/media/photos/places/gomti-sangam.jpg',
+    alt: 'Samudra Narayan temple on the shore where the Gomti meets the Arabian Sea',
+    caption: 'Gomti Sangam, Dwarka',
+    credit: 'Soulful sunshine, CC BY-SA 4.0',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:Samudra_Narayan_Temple_in_Dwarka,_Gomti_Sangam_Ghat.jpg',
+  },
+  sudarshanSetu: {
+    path: '/media/photos/places/sudarshan-setu.jpg',
+    alt: 'The road deck and cable pylon of Sudarshan Setu under a cloudy sky',
+    caption: 'Sudarshan Setu to Bet Dwarka',
+    credit: 'AshishRajeshValanju, CC BY-SA 4.0, cropped',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Sudarshan_setu_dwarka_bet.jpg',
+  },
+  nageshwar: {
+    path: '/media/photos/places/nageshwar.jpg',
+    alt: 'The red domes and spire of Nageshwar temple',
+    caption: 'Nageshwar jyotirlinga',
+    credit: 'Kakarrote, CC BY-SA 4.0',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:Nageshwar_Jyotirling_Temple,_Dwarka,_Gujarat.jpg',
+  },
+  rukmini: {
+    path: '/media/photos/places/rukmini-devi-temple.jpg',
+    alt: 'Rukmini Devi temple standing alone on open ground outside Dwarka',
+    caption: 'Rukmini temple, Dwarka',
+    credit: 'Vinayaraj, CC BY-SA 4.0',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:Rukmini_Devi_Temple,_Dwarka_during_Dwaraka_DWARASPDB_2015_(70).jpg',
+  },
+  somnath: {
+    path: '/media/photos/places/somnath-temple.jpg',
+    alt: 'Somnath temple from the side, with the sea behind it',
+    caption: 'Somnath temple',
+    credit: 'B. SurajPatro1997, CC BY-SA 4.0',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Somanath_mandir_(cropped).jpg',
+  },
+  bhalkaTirth: {
+    path: '/media/photos/places/bhalka-tirth.jpg',
+    alt: 'The gateway of Bhalka Tirth temple with its name written in Hindi',
+    caption: 'Bhalka Tirth, Veraval',
+    credit: 'Manoj Khurana, CC BY-SA 4.0',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:BHALKA-06.jpg',
+  },
+} satisfies Record<string, GalleryPhoto>;
+
+/** A place photograph used as a yatra's cover, which carries no caption. */
+function asCover({ caption: _caption, ...photo }: GalleryPhoto): YatraPhoto {
+  return photo;
+}
+
+const seed: readonly SeedYatra[] = [
+  {
+    slug: 'char-dham-from-haridwar',
+    photo: {
+      path: '/media/photos/char-dham-from-haridwar.jpg',
+      alt: 'Badrinath temple with its painted front, under the hills of the Alaknanda valley',
+      credit: 'Vishwanath Negi, CC BY 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Badrinath_Temple,_Uttarakhand_(Photo-_Vishwanath_Negi).jpg',
+    },
+    name: 'Char Dham Yatra',
+    circuit: 'char-dham-himalaya',
+    summary:
+      'All four Himalayan shrines in one circuit by road from Haridwar: Yamunotri, Gangotri, Kedarnath and Badrinath, with two days of trekking.',
+    durationDays: 10,
+    startCity: 'Haridwar',
+    endCity: 'Haridwar',
+    difficulty: 'demanding',
+    maxAltitudeM: 3583,
+    walkingKm: 44,
+    priceInr: 32500,
+    seasonStartMonth: 5,
+    seasonEndMonth: 10,
+    places: ['Yamunotri', 'Gangotri', 'Kedarnath', 'Badrinath'],
+    inclusions: [
+      'Nine nights in hotels and guest houses, twin sharing',
+      'Breakfast and dinner every day',
+      'Tempo traveller for the full route',
+      'Yatra registration assistance',
+      'Tour manager travelling with the group',
+    ],
+    exclusions: [...STANDARD_EXCLUSIONS, 'Pony, palki or helicopter to Yamunotri and Kedarnath'],
+    days: [
+      ['Haridwar to Barkot', 'Drive 210 km through Mussoorie and Kempty Falls to Barkot in the Yamuna valley.', 'Barkot'],
+      ['Yamunotri darshan', 'Drive to Janki Chatti, then walk 6 km up to Yamunotri temple at 3,293 m. Return to Barkot the same way.', 'Barkot'],
+      ['Barkot to Uttarkashi', 'A shorter 100 km drive. Evening visit to Kashi Vishwanath temple on the Bhagirathi.', 'Uttarkashi'],
+      ['Gangotri darshan', 'Drive 100 km each way along the Bhagirathi to Gangotri temple at 3,100 m. No trekking today.', 'Uttarkashi'],
+      ['Uttarkashi to Guptkashi', 'The longest road day, about 220 km through Tehri and Rudraprayag.', 'Guptkashi'],
+      ['Trek to Kedarnath', 'Drive to Sonprayag and on to Gaurikund, then walk 16 km to Kedarnath at 3,583 m. Evening aarti.', 'Kedarnath'],
+      ['Kedarnath to Guptkashi', 'Morning darshan, then the 16 km descent to Gaurikund and the drive back.', 'Guptkashi'],
+      ['Guptkashi to Badrinath', 'Drive 190 km through Chopta and Joshimath. Evening darshan at Badrinath temple, 3,133 m.', 'Badrinath'],
+      ['Badrinath to Rudraprayag', 'Morning visit to Mana village, then drive down past Vishnuprayag and Karnaprayag.', 'Rudraprayag'],
+      ['Rudraprayag to Haridwar', 'Drive 160 km through Devprayag and Rishikesh. The yatra ends in Haridwar by evening.', null],
+    ],
+    departures: [
+      { date: '2027-05-08', seats: 24, booked: 21 },
+      { date: '2027-05-22', seats: 24, booked: 9 },
+      { date: '2027-06-05', seats: 24, booked: 3 },
+      { date: '2027-09-11', seats: 24, booked: 0, priceInr: 30500 },
+      { date: '2027-09-25', seats: 24, booked: 0, priceInr: 30500 },
+    ],
+  },
+  {
+    slug: 'kedarnath-badrinath-from-haridwar',
+    photo: {
+      path: '/media/photos/kedarnath-badrinath-from-haridwar.jpg',
+      alt: 'Kedarnath temple in the monsoon, with green slopes and cloud behind it',
+      credit: 'Shivam Kumar 766, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Kedarnath_Temple_in_Rainy_season.jpg',
+    },
+    name: 'Kedarnath and Badrinath',
+    circuit: 'char-dham-himalaya',
+    summary:
+      'The two higher dhams in six days from Haridwar, with one night at Kedarnath so the morning darshan is unhurried.',
+    durationDays: 6,
+    startCity: 'Haridwar',
+    endCity: 'Haridwar',
+    difficulty: 'demanding',
+    maxAltitudeM: 3583,
+    walkingKm: 32,
+    priceInr: 21500,
+    seasonStartMonth: 5,
+    seasonEndMonth: 10,
+    places: ['Kedarnath', 'Badrinath', 'Devprayag'],
+    inclusions: [
+      'Five nights in hotels and guest houses, twin sharing',
+      'Breakfast and dinner every day',
+      'Tempo traveller for the full route',
+      'Yatra registration assistance',
+      'Tour manager travelling with the group',
+    ],
+    exclusions: [...STANDARD_EXCLUSIONS, 'Pony, palki or helicopter to Kedarnath'],
+    days: [
+      ['Haridwar to Guptkashi', 'Drive 205 km along the Ganga and Mandakini, stopping at the Devprayag confluence.', 'Guptkashi'],
+      ['Trek to Kedarnath', 'Drive to Gaurikund and walk 16 km to Kedarnath at 3,583 m. Evening aarti at the temple.', 'Kedarnath'],
+      ['Kedarnath to Guptkashi', 'Early darshan, then the 16 km walk down and the drive back to Guptkashi.', 'Guptkashi'],
+      ['Guptkashi to Badrinath', 'Drive 190 km through Chopta and Joshimath. Evening darshan at Badrinath, 3,133 m.', 'Badrinath'],
+      ['Badrinath to Rudraprayag', 'Visit Mana village in the morning, then drive down the Alaknanda valley.', 'Rudraprayag'],
+      ['Rudraprayag to Haridwar', 'Drive 160 km through Rishikesh. The yatra ends in Haridwar by late afternoon.', null],
+    ],
+    departures: [
+      { date: '2027-05-15', seats: 20, booked: 20 },
+      { date: '2027-05-29', seats: 20, booked: 14 },
+      { date: '2027-06-12', seats: 20, booked: 2 },
+      { date: '2027-10-02', seats: 20, booked: 0 },
+    ],
+  },
+  {
+    slug: 'vaishno-devi-from-jammu',
+    photo: {
+      path: '/media/photos/vaishno-devi-from-jammu.jpg',
+      alt: 'The white buildings of Vaishno Devi Bhawan on the side of the Trikuta hills',
+      credit: 'Devansh srivastav, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Vaisno_dev_bhawan.jpg',
+    },
+    name: 'Vaishno Devi',
+    circuit: 'char-dham-himalaya',
+    summary:
+      'Four days from Jammu with a full day for the 13 km climb from Katra to the Bhawan and a rest day after it.',
+    durationDays: 4,
+    startCity: 'Jammu',
+    endCity: 'Jammu',
+    difficulty: 'moderate',
+    maxAltitudeM: 1585,
+    walkingKm: 26,
+    priceInr: 9800,
+    seasonStartMonth: 1,
+    seasonEndMonth: 12,
+    places: ['Katra', 'Vaishno Devi Bhawan', 'Ardhkuwari', 'Raghunath Temple'],
+    inclusions: [
+      'Three nights in a hotel in Katra, twin sharing',
+      'Breakfast and dinner every day',
+      'Transfers between Jammu and Katra',
+      'Help with yatra registration slips',
+    ],
+    exclusions: [...STANDARD_EXCLUSIONS, 'Pony, palki, battery car or helicopter on the climb'],
+    days: [
+      ['Jammu to Katra', 'Pick-up at Jammu Tawi station and a 45 km drive to Katra. Collect yatra slips in the evening.', 'Katra'],
+      ['Climb to the Bhawan', 'Start before dawn. 13 km on a paved path through Banganga and Ardhkuwari to the shrine at 1,585 m, then back down.', 'Katra'],
+      ['Rest day in Katra', 'A free morning. Those who wish can visit the local market or Baba Dhansar by road.', 'Katra'],
+      ['Katra to Jammu', 'Drive back with a stop at Raghunath Temple. Drop at Jammu Tawi by early afternoon.', null],
+    ],
+    departures: [
+      { date: '2026-11-13', seats: 30, booked: 18 },
+      { date: '2026-12-11', seats: 30, booked: 6 },
+      { date: '2027-01-22', seats: 30, booked: 0 },
+      { date: '2027-03-12', seats: 30, booked: 0 },
+    ],
+  },
+  {
+    slug: 'kashi-prayagraj-ayodhya',
+    photo: {
+      path: '/media/photos/kashi-prayagraj-ayodhya.jpg',
+      alt: 'Boats moored below the steps and umbrellas of Dashashwamedh Ghat in Varanasi',
+      credit: 'Sulagna Halder, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:DASHASHWAMEDH_GHAT,_VARANASI.jpg',
+    },
+    name: 'Kashi, Prayagraj and Ayodhya',
+    circuit: 'jyotirlinga',
+    summary:
+      'Kashi Vishwanath jyotirlinga and the Ganga aarti in Varanasi, a dip at the Triveni Sangam, and Ram Mandir in Ayodhya.',
+    durationDays: 5,
+    startCity: 'Varanasi',
+    endCity: 'Ayodhya',
+    difficulty: 'easy',
+    maxAltitudeM: null,
+    walkingKm: 8,
+    priceInr: 14500,
+    seasonStartMonth: 10,
+    seasonEndMonth: 3,
+    places: ['Kashi Vishwanath', 'Dashashwamedh Ghat', 'Sarnath', 'Triveni Sangam', 'Ram Mandir'],
+    inclusions: [
+      'Four nights in hotels, twin sharing',
+      'Breakfast and dinner every day',
+      'Air-conditioned coach between cities',
+      'Boat ride on the Ganga and at the Sangam',
+      'Tour manager travelling with the group',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Arrive in Varanasi', 'Check in by noon. Evening Ganga aarti at Dashashwamedh Ghat, seen from a boat.', 'Varanasi'],
+      ['Kashi Vishwanath and Sarnath', 'Early darshan at Kashi Vishwanath through the corridor, then Annapurna and Kaal Bhairav temples. Afternoon at Sarnath.', 'Varanasi'],
+      ['Varanasi to Prayagraj', 'Drive 125 km. Boat to the Triveni Sangam, then Bade Hanuman temple and Akshayavat.', 'Prayagraj'],
+      ['Prayagraj to Ayodhya', 'Drive 170 km. Evening aarti on the Sarayu at Naya Ghat.', 'Ayodhya'],
+      ['Ayodhya darshan', 'Ram Mandir, Hanuman Garhi and Kanak Bhawan in the morning. The yatra ends after lunch.', null],
+    ],
+    departures: [
+      { date: '2026-11-06', seats: 28, booked: 25 },
+      { date: '2026-11-27', seats: 28, booked: 11 },
+      { date: '2026-12-18', seats: 28, booked: 4 },
+      { date: '2027-01-29', seats: 28, booked: 0 },
+      { date: '2027-02-19', seats: 28, booked: 0 },
+    ],
+  },
+  {
+    slug: 'mahakaleshwar-omkareshwar-from-indore',
+    photo: {
+      path: '/media/photos/mahakaleshwar-omkareshwar-from-indore.jpg',
+      alt: 'The Narmada at Omkareshwar, with the temple on the left bank and the footbridge beyond',
+      credit: 'Jean-Pierre Dalbéra, CC BY 2.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Le_fleuve_Narmada_%C3%A0_Omkareshwar_temple_Madhya_Pradesh_India.jpg',
+    },
+    name: 'Mahakaleshwar and Omkareshwar',
+    circuit: 'jyotirlinga',
+    summary:
+      'Two jyotirlingas in Madhya Pradesh in three days from Indore, with help registering for the Bhasma aarti in Ujjain.',
+    durationDays: 3,
+    startCity: 'Indore',
+    endCity: 'Indore',
+    difficulty: 'easy',
+    maxAltitudeM: null,
+    walkingKm: 5,
+    priceInr: 8900,
+    seasonStartMonth: 1,
+    seasonEndMonth: 12,
+    places: ['Mahakaleshwar', 'Kal Bhairav', 'Omkareshwar', 'Mamleshwar'],
+    inclusions: [
+      'Two nights in hotels, twin sharing',
+      'Breakfast and dinner every day',
+      'Air-conditioned coach from Indore',
+      'Help with Bhasma aarti registration, subject to temple availability',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Indore to Ujjain', 'Drive 55 km. Darshan at Mahakaleshwar, then Harsiddhi and Kal Bhairav temples and Ram Ghat on the Shipra.', 'Ujjain'],
+      ['Ujjain to Omkareshwar', 'Bhasma aarti before dawn for those registered. Drive 140 km to the island temple of Omkareshwar on the Narmada.', 'Omkareshwar'],
+      ['Mamleshwar and return', 'Morning darshan at Mamleshwar across the river, then drive 80 km back to Indore by mid-afternoon.', null],
+    ],
+    departures: [
+      { date: '2026-10-30', seats: 32, booked: 27 },
+      { date: '2026-11-20', seats: 32, booked: 12 },
+      { date: '2026-12-25', seats: 32, booked: 8 },
+      { date: '2027-02-12', seats: 32, booked: 0 },
+    ],
+  },
+  {
+    slug: 'maharashtra-jyotirlingas-from-pune',
+    photo: {
+      path: '/media/photos/maharashtra-jyotirlingas-from-pune.jpg',
+      alt: 'The black stone towers of Trimbakeshwar temple against a clear sky',
+      credit: 'Saket Verma, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Trimbakeshwar_Shiva_Temple_2005.jpg',
+    },
+    name: 'Three jyotirlingas of Maharashtra',
+    circuit: 'jyotirlinga',
+    summary:
+      'Bhimashankar, Trimbakeshwar and Grishneshwar by road from Pune, with a night in Shirdi on the way.',
+    durationDays: 5,
+    startCity: 'Pune',
+    endCity: 'Pune',
+    difficulty: 'moderate',
+    maxAltitudeM: 1000,
+    walkingKm: 9,
+    priceInr: 16800,
+    seasonStartMonth: 10,
+    seasonEndMonth: 5,
+    places: ['Bhimashankar', 'Trimbakeshwar', 'Shirdi', 'Grishneshwar', 'Ellora'],
+    inclusions: [
+      'Four nights in hotels, twin sharing',
+      'Breakfast and dinner every day',
+      'Air-conditioned coach for the full route',
+      'Entry to the Ellora caves',
+      'Tour manager travelling with the group',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Pune to Bhimashankar', 'Drive 110 km into the Sahyadri hills. About 230 steps lead down to the temple; return to the hotel near Manchar.', 'Manchar'],
+      ['Manchar to Nashik', 'Drive 180 km. Evening at Panchavati and Ramkund on the Godavari.', 'Nashik'],
+      ['Trimbakeshwar and Shirdi', 'Darshan at Trimbakeshwar, 28 km from Nashik, then drive 120 km to Shirdi for the evening aarti.', 'Shirdi'],
+      ['Shirdi to Grishneshwar', 'Drive 110 km to Grishneshwar near Ellora. Afternoon at the Kailasa temple in the Ellora caves.', 'Chhatrapati Sambhajinagar'],
+      ['Return to Pune', 'Drive 235 km back to Pune, arriving by late afternoon.', null],
+    ],
+    departures: [
+      { date: '2026-11-18', seats: 26, booked: 10 },
+      { date: '2026-12-16', seats: 26, booked: 5 },
+      { date: '2027-01-20', seats: 26, booked: 0 },
+    ],
+  },
+  {
+    slug: 'dwarka-somnath-from-ahmedabad',
+    photo: {
+      path: '/media/photos/dwarka-somnath-from-ahmedabad.jpg',
+      alt: 'Dwarkadhish temple and the town of Dwarka seen across the Gomti',
+      credit: 'Kridha20, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Dwarkadhish_Temple_20.jpg',
+    },
+    gallery: [
+      PLACE_PHOTOS.dwarkadhish,
+      PLACE_PHOTOS.sudarshanSetu,
+      PLACE_PHOTOS.nageshwar,
+      PLACE_PHOTOS.rukmini,
+      PLACE_PHOTOS.somnath,
+      PLACE_PHOTOS.bhalkaTirth,
+    ],
+    name: 'Dwarka and Somnath',
+    circuit: 'gujarat-west',
+    summary:
+      'The Saurashtra coast in five days: Dwarkadhish, Bet Dwarka, Nageshwar jyotirlinga, Porbandar and Somnath.',
+    durationDays: 5,
+    startCity: 'Ahmedabad',
+    endCity: 'Ahmedabad',
+    difficulty: 'easy',
+    maxAltitudeM: null,
+    walkingKm: 6,
+    priceInr: 13500,
+    seasonStartMonth: 10,
+    seasonEndMonth: 3,
+    places: ['Dwarkadhish', 'Bet Dwarka', 'Nageshwar', 'Porbandar', 'Somnath'],
+    inclusions: [
+      'Four nights in hotels, twin sharing',
+      'Breakfast and dinner every day',
+      'Air-conditioned coach for the full route',
+      'Sound and light show at Somnath',
+      'Tour manager travelling with the group',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Ahmedabad to Dwarka', 'A long road day of about 440 km through Rajkot and Jamnagar. Evening aarti at Dwarkadhish temple.', 'Dwarka'],
+      ['Bet Dwarka and Nageshwar', 'Cross the Sudarshan Setu to Bet Dwarka, then Nageshwar jyotirlinga, Gopi Talav and Rukmini temple.', 'Dwarka'],
+      ['Dwarka to Somnath', 'Drive about 235 km down the coast, stopping at Kirti Mandir in Porbandar. Evening aarti and the light show at Somnath.', 'Somnath'],
+      ['Somnath and Bhalka Tirth', 'Morning darshan, then Triveni Sangam, Bhalka Tirth and Gita Mandir. Afternoon at leisure by the sea.', 'Somnath'],
+      ['Somnath to Ahmedabad', 'Drive 410 km back through Junagadh, reaching Ahmedabad in the evening.', null],
+    ],
+    departures: [
+      { date: '2026-11-11', seats: 30, booked: 26 },
+      { date: '2026-12-09', seats: 30, booked: 13 },
+      { date: '2027-01-13', seats: 30, booked: 2 },
+      { date: '2027-02-10', seats: 30, booked: 0 },
+    ],
+  },
+  {
+    slug: 'dwarka-from-ahmedabad',
+    photo: asCover(PLACE_PHOTOS.dwarkadhish),
+    gallery: [
+      PLACE_PHOTOS.gomtiSangam,
+      PLACE_PHOTOS.sudarshanSetu,
+      PLACE_PHOTOS.nageshwar,
+      PLACE_PHOTOS.rukmini,
+    ],
+    name: 'Dwarka and Bet Dwarka',
+    circuit: 'gujarat-west',
+    summary:
+      'Three days from Ahmedabad for Dwarkadhish, Bet Dwarka across the Sudarshan Setu, and Nageshwar jyotirlinga.',
+    durationDays: 3,
+    startCity: 'Ahmedabad',
+    endCity: 'Ahmedabad',
+    difficulty: 'easy',
+    maxAltitudeM: null,
+    walkingKm: 5,
+    priceInr: 8900,
+    seasonStartMonth: 10,
+    seasonEndMonth: 3,
+    places: ['Dwarkadhish', 'Gomti Ghat', 'Bet Dwarka', 'Nageshwar', 'Rukmini temple'],
+    inclusions: [
+      'Two nights in a hotel in Dwarka, twin sharing',
+      'Breakfast and dinner every day',
+      'Air-conditioned coach for the full route',
+      'Tour manager travelling with the group',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Ahmedabad to Dwarka', 'A long road day of about 440 km through Rajkot and Jamnagar. Evening aarti at Dwarkadhish temple.', 'Dwarka'],
+      ['Bet Dwarka and Nageshwar', 'Drive 30 km to Okha and cross the Sudarshan Setu to Bet Dwarka. On the way back, Nageshwar jyotirlinga, Gopi Talav and Rukmini temple.', 'Dwarka'],
+      ['Dwarka to Ahmedabad', 'Morning darshan at Dwarkadhish temple and a walk along Gomti Ghat to the Samudra Narayan temple, then the 440 km drive back, reaching Ahmedabad at night.', null],
+    ],
+    departures: [
+      { date: '2026-11-20', seats: 30, booked: 12 },
+      { date: '2026-12-18', seats: 30, booked: 6 },
+      { date: '2027-01-22', seats: 30, booked: 0 },
+      { date: '2027-02-19', seats: 30, booked: 0 },
+    ],
+  },
+  {
+    slug: 'ambaji-nathdwara-from-ahmedabad',
+    photo: {
+      path: '/media/photos/ambaji-nathdwara-from-ahmedabad.jpg',
+      alt: 'The carved stone front of the Arasuri Ambaji temple',
+      credit: 'Ms Sarah Welch, CC0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:0081323_Arasuri_Ambaji_mandir,_Shakti_Peeth,_north_Gujarat_011.jpg',
+    },
+    name: 'Ambaji and Nathdwara',
+    circuit: 'gujarat-west',
+    summary:
+      'A three-day trip north from Ahmedabad to the shakti peeth at Ambaji and to Shrinathji in Nathdwara.',
+    durationDays: 3,
+    startCity: 'Ahmedabad',
+    endCity: 'Ahmedabad',
+    difficulty: 'easy',
+    maxAltitudeM: null,
+    walkingKm: 4,
+    priceInr: 7400,
+    seasonStartMonth: 1,
+    seasonEndMonth: 12,
+    places: ['Ambaji', 'Gabbar Hill', 'Nathdwara', 'Eklingji'],
+    inclusions: [
+      'Two nights in hotels, twin sharing',
+      'Breakfast and dinner every day',
+      'Air-conditioned coach for the full route',
+      'Ropeway tickets at Gabbar Hill',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Ahmedabad to Ambaji', 'Drive 180 km. Darshan at Ambaji temple, then the ropeway up Gabbar Hill for the evening.', 'Ambaji'],
+      ['Ambaji to Nathdwara', 'Drive 200 km through the Aravallis. Evening darshan of Shrinathji; timings follow the temple jhanki schedule.', 'Nathdwara'],
+      ['Eklingji and return', 'Mangala darshan at Nathdwara, a stop at Eklingji temple, then 300 km back to Ahmedabad.', null],
+    ],
+    departures: [
+      { date: '2026-10-23', seats: 34, booked: 31 },
+      { date: '2026-11-21', seats: 34, booked: 15 },
+      { date: '2026-12-19', seats: 34, booked: 0 },
+    ],
+  },
+  {
+    slug: 'shirdi-shani-shingnapur-from-mumbai',
+    photo: {
+      path: '/media/photos/shirdi-shani-shingnapur-from-mumbai.jpg',
+      alt: 'The Shanidev temple at Shani Shingnapur',
+      credit: 'Shivashanky, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Shree_Shanidev_Temple,_Shani_Shingnapur.jpg',
+    },
+    name: 'Shirdi and Shani Shingnapur',
+    circuit: 'gujarat-west',
+    summary:
+      'A weekend from Mumbai to Sai Baba Samadhi Mandir in Shirdi and the open-air shrine at Shani Shingnapur.',
+    durationDays: 2,
+    startCity: 'Mumbai',
+    endCity: 'Mumbai',
+    difficulty: 'easy',
+    maxAltitudeM: null,
+    walkingKm: 3,
+    priceInr: 5900,
+    seasonStartMonth: 1,
+    seasonEndMonth: 12,
+    places: ['Shirdi', 'Dwarkamai', 'Shani Shingnapur'],
+    inclusions: [
+      'One night in a hotel in Shirdi, twin sharing',
+      'Dinner on day one and breakfast on day two',
+      'Air-conditioned coach from Mumbai',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Mumbai to Shirdi', 'Leave early for the 240 km drive. Afternoon darshan at the Samadhi Mandir, Dwarkamai and Chavadi; evening aarti.', 'Shirdi'],
+      ['Shani Shingnapur and return', 'Drive 70 km to Shani Shingnapur for morning darshan, then back to Mumbai by night.', null],
+    ],
+    departures: [
+      { date: '2026-10-24', seats: 40, booked: 22 },
+      { date: '2026-11-14', seats: 40, booked: 9 },
+      { date: '2026-12-12', seats: 40, booked: 0 },
+      { date: '2027-01-09', seats: 40, booked: 0 },
+    ],
+  },
+  {
+    slug: 'tirupati-from-chennai',
+    photo: {
+      path: '/media/photos/tirupati-from-chennai.jpg',
+      alt: 'The white gateway tower of the Tirumala temple, with the Seshachalam hills behind',
+      credit: 'Nikhilb239, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Tirumala_090615.jpg',
+    },
+    name: 'Tirupati Balaji',
+    circuit: 'south-india',
+    summary:
+      'Two days from Chennai to Sri Venkateswara temple on Tirumala hill, with Padmavathi temple at Tiruchanur.',
+    durationDays: 2,
+    startCity: 'Chennai',
+    endCity: 'Chennai',
+    difficulty: 'easy',
+    maxAltitudeM: 853,
+    walkingKm: 4,
+    priceInr: 6900,
+    seasonStartMonth: 1,
+    seasonEndMonth: 12,
+    places: ['Tirumala', 'Sri Venkateswara Temple', 'Tiruchanur', 'Kapila Theertham'],
+    inclusions: [
+      'One night in a hotel in Tirupati, twin sharing',
+      'Dinner on day one and breakfast on day two',
+      'Air-conditioned coach from Chennai',
+      'Special entry darshan ticket, subject to TTD availability',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Chennai to Tirupati', 'Drive 135 km. Afternoon darshan at Padmavathi temple in Tiruchanur and at Kapila Theertham.', 'Tirupati'],
+      ['Tirumala darshan and return', 'Drive up the ghat road before dawn for darshan at Sri Venkateswara temple. Queue times vary; return to Chennai by night.', null],
+    ],
+    departures: [
+      { date: '2026-10-31', seats: 36, booked: 33 },
+      { date: '2026-11-28', seats: 36, booked: 17 },
+      { date: '2026-12-26', seats: 36, booked: 5 },
+      { date: '2027-01-30', seats: 36, booked: 0 },
+    ],
+  },
+  {
+    slug: 'madurai-rameswaram-kanyakumari',
+    photo: {
+      path: '/media/photos/madurai-rameswaram-kanyakumari.jpg',
+      alt: 'A painted gopuram of the Meenakshi Amman temple in Madurai',
+      credit: 'Supgiri, CC BY-SA 3.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Meenakshi_amman_temple.jpg',
+    },
+    name: 'Madurai, Rameswaram and Kanyakumari',
+    circuit: 'south-india',
+    summary:
+      'Meenakshi Amman temple, the Ramanathaswamy jyotirlinga with its 22 theerthams, Dhanushkodi, and sunrise at the tip of India.',
+    durationDays: 5,
+    startCity: 'Madurai',
+    endCity: 'Madurai',
+    difficulty: 'easy',
+    maxAltitudeM: null,
+    walkingKm: 7,
+    priceInr: 15200,
+    seasonStartMonth: 10,
+    seasonEndMonth: 3,
+    places: ['Meenakshi Amman Temple', 'Ramanathaswamy Temple', 'Dhanushkodi', 'Kanyakumari'],
+    inclusions: [
+      'Four nights in hotels, twin sharing',
+      'Breakfast and dinner every day',
+      'Air-conditioned coach for the full route',
+      'Ferry to the Vivekananda Rock Memorial',
+      'Tour manager travelling with the group',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Arrive in Madurai', 'Check in by noon. Evening darshan at Meenakshi Amman temple and the night ceremony.', 'Madurai'],
+      ['Madurai to Rameswaram', 'Drive 170 km, crossing the Pamban bridge to the island. Evening at Agni Theertham.', 'Rameswaram'],
+      ['Ramanathaswamy and Dhanushkodi', 'Bathe at the 22 theerthams inside the temple before darshan. Afternoon drive to Dhanushkodi and Arichal Munai.', 'Rameswaram'],
+      ['Rameswaram to Kanyakumari', 'Drive 310 km down the coast. Sunset at the meeting of the three seas.', 'Kanyakumari'],
+      ['Kanyakumari to Madurai', 'Sunrise, then the ferry to Vivekananda Rock and Kumari Amman temple. Drive 245 km back to Madurai.', null],
+    ],
+    departures: [
+      { date: '2026-11-25', seats: 28, booked: 19 },
+      { date: '2026-12-23', seats: 28, booked: 24 },
+      { date: '2027-01-27', seats: 28, booked: 3 },
+      { date: '2027-02-24', seats: 28, booked: 0 },
+    ],
+  },
+];
+
+function toItinerary(days: SeedYatra['days']): ItineraryDay[] {
+  return days.map(([title, description, overnight], index) => ({
+    day: index + 1,
+    title,
+    description,
+    overnight,
+  }));
+}
+
+export const seedYatras: readonly Yatra[] = seed.map(
+  ({ priceInr, days, departures: _departures, gallery, ...rest }) => ({
+    ...rest,
+    gallery: gallery ?? [],
+    id: `yatra-${rest.slug}` as YatraId,
+    basePrice: rupees(priceInr),
+    itinerary: toItinerary(days),
+  }),
+);
+
+export const seedDepartures: readonly DepartureProps[] = seed.flatMap((yatra) =>
+  yatra.departures.map((departure) => ({
+    id: `dep-${yatra.slug}-${departure.date}` as DepartureId,
+    yatraId: `yatra-${yatra.slug}` as YatraId,
+    startDate: isoDate(departure.date),
+    seatsTotal: departure.seats,
+    seatsBooked: departure.booked,
+    price: rupees(departure.priceInr ?? yatra.priceInr),
+  })),
+);

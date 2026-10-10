@@ -1,0 +1,77 @@
+.site-header {
+  position: relative;
+  background: var(--blue);
+  color: var(--paper);
+}
+
+/* A cut-paper toran along the lower edge of the band. */
+.site-header::after {
+  content: '';
+  position: absolute;
+  inset: 100% 0 auto;
+  z-index: 1;
+  height: 0.625rem;
+  background: conic-gradient(from 135deg at 50% 0, var(--blue) 90deg, transparent 0) 0 0 / 1.25rem
+    100% repeat-x;
+}
+
+.site-header__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+  padding-block: var(--space-3);
+}
+
+.site-header__name {
+  color: var(--yellow);
+  font-family: var(--font-sign);
+  font-size: var(--step-2);
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.site-header__name:hover {
+  color: var(--paper);
+}
+
+.site-header__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-5);
+}
+
+.site-header__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--paper);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.site-header__links a:hover {
+  color: var(--yellow);
+  text-decoration: underline;
+}
+
+.site-header :focus-visible {
+  outline-color: var(--yellow);
+}
+
+.site-header__skip {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 2;
+  padding: var(--space-2) var(--space-4);
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 700;
+  translate: 0 -200%;
+}
+
+.site-header__skip:focus {
+  translate: 0 0;
+}
