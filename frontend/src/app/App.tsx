@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { matchPath, useLocation } from '../shared/lib/router';
+import { jumpToTop, scrollToElement, useSmoothScroll } from '../shared/motion/smoothScroll';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { YatraDetailPage } from './pages/YatraDetailPage';
@@ -20,12 +21,13 @@ function resolvePage(pathname: string): ReactNode {
 
 export function App() {
   const { pathname, hash } = useLocation();
+  useSmoothScroll();
 
   // On a new page, start at the top and move keyboard focus to the content,
   // unless the address points at a section.
   useEffect(() => {
     if (hash) return;
-    window.scrollTo(0, 0);
+    jumpToTop();
     document.getElementById('main')?.focus({ preventScroll: true });
   }, [pathname, hash]);
 
@@ -33,7 +35,8 @@ export function App() {
     if (!hash) return;
     // Sections can render after data loads; try again on the next frame.
     const frame = requestAnimationFrame(() => {
-      document.getElementById(hash.slice(1))?.scrollIntoView();
+      const target = document.getElementById(hash.slice(1));
+      if (target) scrollToElement(target);
     });
     return () => cancelAnimationFrame(frame);
   }, [pathname, hash]);

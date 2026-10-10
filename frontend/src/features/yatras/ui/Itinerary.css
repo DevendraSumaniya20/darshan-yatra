@@ -13,6 +13,9 @@
   left: calc(var(--marker) / 2 - 1.5px);
   width: 3px;
   background: var(--red);
+  /* Drawn from the top by the scroll animation; fully drawn without it. */
+  transform-origin: 50% 0;
+  scale: 1 var(--thread, 1);
 }
 
 .itinerary__day {

@@ -5,35 +5,50 @@
 }
 
 .hero__plate {
-  padding-block: var(--space-7) var(--space-8);
+  position: relative;
+  display: grid;
+  overflow: hidden;
   border: var(--frame) solid var(--red);
   outline: var(--rule) solid var(--blue);
   outline-offset: calc(-1 * (var(--frame) + var(--space-2)));
 }
 
-.hero__top {
-  row-gap: var(--space-5);
-  align-items: end;
-}
-
-.hero__top > * {
-  grid-column: 1 / -1;
-}
-
-.hero__title {
-  font-size: var(--step-5);
-  line-height: 1.04;
-}
-
-.hero__intro {
+.hero__copy {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: var(--space-4);
   justify-items: start;
+  padding-block: var(--space-7) var(--space-5);
 }
 
-.hero__pad-title {
-  margin-block: var(--space-7) var(--space-5);
-  font-size: var(--step-2);
+.hero__title {
+  max-width: 11ch;
+  font-size: var(--step-6);
+  line-height: 1;
+}
+
+.hero__word {
+  display: inline-block;
+  white-space: pre;
+}
+
+.hero__lede {
+  max-width: 34ch;
+  font-weight: 500;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.hero__art {
+  display: block;
+  width: 100%;
+  height: clamp(9rem, 34vw, 24rem);
 }
 
 @media (min-width: 64rem) {
@@ -41,20 +56,67 @@
     padding: var(--space-4);
   }
 
-  .hero__title {
-    grid-column: 1 / span 8;
+  .hero__copy {
+    padding-block: var(--space-8) var(--space-4);
   }
 
-  .hero__intro {
-    grid-column: 9 / span 4;
-    padding-bottom: var(--space-2);
+  .hero__title {
+    max-width: 14ch;
   }
+}
+
+/* The date pad hangs on an ultramarine wall under the picture. */
+.leaving {
+  padding-block: var(--space-7) var(--space-6);
+  background: var(--blue);
+  color: var(--paper);
+}
+
+.leaving__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.leaving__title {
+  color: var(--yellow);
+  font-family: var(--font-sign);
+  font-size: var(--step-4);
+  font-stretch: 100%;
+  font-weight: 400;
+}
+
+.leaving__all {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.leaving__all:hover {
+  color: var(--yellow);
+}
+
+.leaving :focus-visible {
+  outline-color: var(--yellow);
+}
+
+.leaving .loading-notice {
+  color: var(--paper);
 }
 
 /* A real sequence, so the steps are numbered: numerals borrowed from the date pad. */
 .how-it-works {
-  background: var(--yellow-pale);
-  border-block: var(--rule) solid var(--ink);
+  background: var(--red);
+  color: var(--paper);
+}
+
+.how-it-works :focus-visible {
+  outline-color: var(--yellow);
 }
 
 .how-it-works__steps {
@@ -75,8 +137,8 @@
   content: counter(step);
   grid-row: span 2;
   min-width: 1ch;
-  color: var(--red);
-  font-size: 4.5rem;
+  color: var(--yellow);
+  font-size: 6rem;
   font-stretch: 75%;
   font-weight: 800;
   line-height: 0.85;

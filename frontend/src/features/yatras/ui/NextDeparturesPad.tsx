@@ -1,5 +1,6 @@
-import type { CSSProperties } from 'react';
+import { useRef } from 'react';
 import { formatInr, plural } from '../../../shared/lib/format';
+import { gsap, useGSAP, withMotion } from '../../../shared/motion/gsap';
 import { DateSheet } from '../../../shared/ui/DateSheet';
 import { Link } from '../../../shared/ui/Link';
 import { nextDepartures, seatsLabel, type YatraSummary } from '../model/yatra';
@@ -12,6 +13,25 @@ type NextDeparturesPadProps = {
 /** The soonest departures with seats, hung as a row of date-pad sheets. */
 export function NextDeparturesPad({ yatras }: NextDeparturesPadProps) {
   const upcoming = nextDepartures(yatras, 4);
+  const list = useRef<HTMLUListElement>(null);
+
+  // The sheets swing to rest as the pad is hung.
+  useGSAP(
+    () =>
+      withMotion(() => {
+        gsap.from('.next-pad__sheet', {
+          rotation: -10,
+          y: -40,
+          opacity: 0,
+          transformOrigin: '50% 0%',
+          duration: 1.4,
+          ease: 'elastic.out(1, 0.5)',
+          stagger: 0.11,
+          scrollTrigger: { trigger: list.current, start: 'top 88%', once: true },
+        });
+      }),
+    { scope: list, dependencies: [upcoming.length] },
+  );
 
   if (upcoming.length === 0) {
     return (
@@ -23,9 +43,9 @@ export function NextDeparturesPad({ yatras }: NextDeparturesPadProps) {
   }
 
   return (
-    <ul className="next-pad">
-      {upcoming.map(({ yatra, departure }, index) => (
-        <li key={departure.id} style={{ '--order': index } as CSSProperties}>
+    <ul className="next-pad" ref={list}>
+      {upcoming.map(({ yatra, departure }) => (
+        <li key={departure.id}>
           <Link className="next-pad__sheet" to={`/yatras/${yatra.slug}?departure=${departure.id}`}>
             <DateSheet date={departure.startDate}>
               <span className="next-pad__name">{yatra.name}</span>

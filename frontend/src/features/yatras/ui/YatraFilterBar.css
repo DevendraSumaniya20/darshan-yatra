@@ -3,10 +3,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-4);
   align-items: end;
-  padding: var(--space-4);
-  border: var(--rule) solid var(--ink);
-  border-radius: var(--corner);
-  background: var(--yellow);
 }
 
 .filter-bar__clear {
@@ -16,13 +12,7 @@
 
 @media (min-width: 48rem) {
   .filter-bar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 64rem) {
-  .filter-bar {
-    grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   }
 
   .filter-bar__clear {

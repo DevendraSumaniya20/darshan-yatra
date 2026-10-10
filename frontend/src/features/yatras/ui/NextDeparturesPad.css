@@ -1,18 +1,30 @@
+/* On phones the pad is a row to swipe; from the wide breakpoint all four sheets hang side by side. */
 .next-pad {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-6) var(--space-4);
-}
-
-@media (min-width: 48rem) {
-  .next-pad {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--gutter);
-  }
+  display: flex;
+  gap: var(--space-4);
+  margin-inline: calc(-1 * var(--gutter));
+  padding: var(--space-2) var(--gutter) var(--space-6);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-color: var(--yellow) transparent;
 }
 
 .next-pad > li {
   display: grid;
+  flex: 0 0 min(15rem, 72vw);
+  scroll-snap-align: start;
+}
+
+@media (min-width: 64rem) {
+  .next-pad {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gutter);
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+  }
 }
 
 .next-pad__sheet {
@@ -20,10 +32,21 @@
   color: var(--ink);
   text-decoration: none;
   transform-origin: 50% 0;
+  transition:
+    rotate 320ms var(--ease-out),
+    translate 320ms var(--ease-out);
 }
 
+/* A sheet lifts and swings a little when picked up. */
 .next-pad__sheet:hover {
   color: var(--ink);
+  rotate: -1.6deg;
+  translate: 0 -5px;
+}
+
+.next-pad__sheet:focus-visible {
+  outline-color: var(--yellow);
+  outline-offset: 5px;
 }
 
 .next-pad__sheet:hover .next-pad__name {
@@ -49,22 +72,5 @@
   padding: var(--space-5);
   border: var(--rule) solid var(--ink);
   background: var(--paper);
-}
-
-/* The one authored moment: the sheets swing to rest as the pad is hung. */
-@media (prefers-reduced-motion: no-preference) {
-  .next-pad__sheet {
-    animation: next-pad-settle 900ms var(--ease-out) backwards;
-    animation-delay: calc(var(--order) * 70ms);
-  }
-}
-
-@keyframes next-pad-settle {
-  from {
-    rotate: -5deg;
-    translate: 0 -0.5rem;
-  }
-  55% {
-    rotate: 1.2deg;
-  }
+  color: var(--ink);
 }

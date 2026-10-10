@@ -1,0 +1,68 @@
+.route-strip {
+  background: var(--blue);
+  color: var(--paper);
+}
+
+.route-strip__title {
+  padding: var(--space-4) var(--gutter) 0;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  color: var(--yellow);
+  font-size: var(--step-1);
+  font-stretch: 100%;
+  font-weight: 700;
+}
+
+.route-strip__stops {
+  display: flex;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding: var(--space-4) var(--gutter) var(--space-5);
+  overflow-x: auto;
+  scrollbar-color: var(--yellow) transparent;
+}
+
+.route-strip__stops > li {
+  position: relative;
+  flex: 1 0 auto;
+  min-width: 6.5rem;
+  padding-top: var(--space-5);
+  padding-right: var(--space-4);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* The road between stops. */
+.route-strip__stops > li::before {
+  content: '';
+  position: absolute;
+  top: 0.4rem;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--yellow);
+}
+
+.route-strip__stops > li:last-child {
+  flex-grow: 0;
+  min-width: 0;
+  padding-right: 0;
+}
+
+.route-strip__stops > li:last-child::before {
+  display: none;
+}
+
+/* The stop itself. */
+.route-strip__stops > li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1rem;
+  height: 1rem;
+  border: 3px solid var(--yellow);
+  border-radius: 50%;
+  background: var(--red);
+}

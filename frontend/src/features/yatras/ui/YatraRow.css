@@ -1,42 +1,22 @@
 .yatra-row {
-  row-gap: var(--space-5);
-  padding-block: var(--space-6);
-  border-bottom: var(--rule) solid var(--red);
-}
-
-.yatra-row > * {
-  grid-column: 1 / -1;
-}
-
-.yatra-row__date {
   display: grid;
-  grid-template-columns: 9.5rem 1fr;
-  gap: var(--space-2) var(--space-4);
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+  border: var(--frame) solid var(--ink);
+  border-radius: var(--corner);
+  background: var(--paper);
 }
 
-.yatra-row__date-label {
-  grid-column: 1 / -1;
-  font-size: var(--step--1);
-  font-weight: 650;
-}
-
-.yatra-row__seats {
-  font-weight: 700;
-  text-align: center;
-}
-
-.yatra-row__no-date {
-  grid-column: 1 / -1;
-  padding: var(--space-3);
-  border: var(--rule) dashed var(--ink-soft);
-  color: var(--ink-soft);
+.yatra-row__picture {
+  aspect-ratio: 400 / 200;
+  border-bottom: var(--frame) solid var(--ink);
 }
 
 .yatra-row__main {
   display: grid;
   gap: var(--space-3);
   align-content: start;
+  padding: var(--space-5);
 }
 
 .yatra-row__name {
@@ -56,46 +36,78 @@
   text-decoration-thickness: 2px;
 }
 
-.yatra-row__price {
-  display: grid;
-  gap: var(--space-2);
-  justify-items: start;
-  align-content: start;
+.yatra-row__buy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: var(--rule) solid var(--red);
 }
 
-.yatra-row__amount {
+.yatra-row__price {
+  color: var(--ink-soft);
+}
+
+.yatra-row__price strong {
+  color: var(--ink);
   font-size: var(--step-3);
   font-stretch: 80%;
   font-weight: 800;
   line-height: 1;
 }
 
-.yatra-row__from,
-.yatra-row__per,
-.yatra-row__count {
-  color: var(--ink-soft);
+/* The date column sits on the yellow plate, like the pad under a calendar picture. */
+.yatra-row__date {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: var(--space-2) var(--space-4);
+  align-items: center;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  background: var(--yellow);
 }
 
-.yatra-row__price .button {
-  margin-top: var(--space-2);
+.yatra-row__date-label {
+  grid-column: 1 / -1;
+  font-weight: 700;
+}
+
+.yatra-row__seats {
+  font-weight: 700;
+  text-align: center;
+}
+
+.yatra-row__more {
+  font-weight: 650;
+}
+
+.yatra-row__no-date {
+  grid-column: 1 / -1;
+  padding: var(--space-3);
+  border: var(--rule) dashed var(--ink);
 }
 
 @media (min-width: 48rem) {
   .yatra-row {
-    align-items: start;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr) minmax(0, 3fr);
+  }
+
+  .yatra-row__picture {
+    aspect-ratio: auto;
+    border-bottom: 0;
+    border-right: var(--frame) solid var(--ink);
   }
 
   .yatra-row__date {
-    grid-column: 1 / span 3;
     grid-template-columns: 1fr;
-    max-width: 10.5rem;
+    align-content: center;
+    justify-items: center;
+    border-left: var(--frame) solid var(--ink);
+    text-align: center;
   }
 
-  .yatra-row__main {
-    grid-column: 4 / span 6;
-  }
-
-  .yatra-row__price {
-    grid-column: 10 / span 3;
+  .yatra-row__date .date-sheet {
+    width: 9.5rem;
   }
 }

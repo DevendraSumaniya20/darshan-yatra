@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { BookingConfirmation } from '../../features/booking/model/booking';
 import { BookingForm } from '../../features/booking/ui/BookingForm';
 import { BookingReceipt } from '../../features/booking/ui/BookingReceipt';
@@ -10,10 +10,13 @@ import {
   seasonLabel,
   type YatraDetail,
 } from '../../features/yatras/model/yatra';
+import { CircuitPlate } from '../../features/yatras/ui/art/CircuitPlate';
 import { DeparturePicker } from '../../features/yatras/ui/DeparturePicker';
 import { Itinerary } from '../../features/yatras/ui/Itinerary';
-import { formatInr } from '../../shared/lib/format';
+import { RouteStrip } from '../../features/yatras/ui/RouteStrip';
+import { dateParts, formatInr } from '../../shared/lib/format';
 import { useLocation } from '../../shared/lib/router';
+import { gsap, ScrollTrigger, useGSAP, withMotion } from '../../shared/motion/gsap';
 import { Link } from '../../shared/ui/Link';
 import { LoadingNotice, StatusMessage } from '../../shared/ui/StatusMessage';
 import { NotFoundPage } from './NotFoundPage';
@@ -77,16 +80,56 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
   const selected = open.find((departure) => departure.id === chosenId) ?? open[0] ?? null;
 
   const difficulty = DIFFICULTY_INFO[yatra.difficulty];
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () =>
+      withMotion(() => {
+        gsap
+          .timeline({ defaults: { ease: 'power3.out' } })
+          .from('.yatra-detail__title', { y: 40, opacity: 0, duration: 0.8 })
+          .from('.yatra-detail__intro .lede', { y: 24, opacity: 0, duration: 0.6 }, '-=0.5')
+          .from('.yatra-detail__picture', { clipPath: 'inset(0 100% 0 0)', duration: 1, ease: 'power4.inOut' }, 0.1)
+          .from('.yatra-detail__picture .circuit-plate', { scale: 1.35, duration: 1.6 }, 0.1)
+          .from('.yatra-detail__facts > div', { y: 20, opacity: 0, duration: 0.5, stagger: 0.05 }, 0.5)
+          .from('.route-strip__stops > li', { x: -24, opacity: 0, duration: 0.5, stagger: 0.07 }, 0.7)
+          .from('.departure-picker__list > li', { y: -24, opacity: 0, rotation: -6, transformOrigin: '50% 0%', duration: 1, ease: 'elastic.out(1, 0.6)', stagger: 0.08 }, 0.8);
+
+        // The thread is drawn down the plan as the page is read.
+        gsap.fromTo(
+          '.itinerary',
+          { '--thread': 0 },
+          {
+            '--thread': 1,
+            ease: 'none',
+            scrollTrigger: { trigger: '.itinerary', start: 'top 72%', end: 'bottom 62%', scrub: 0.6 },
+          },
+        );
+        gsap.set('.itinerary__number', { scale: 0 });
+        ScrollTrigger.batch('.itinerary__number', {
+          start: 'top 74%',
+          once: true,
+          onEnter: (marks) =>
+            gsap.to(marks, { scale: 1, duration: 0.6, ease: 'back.out(2.4)', stagger: 0.1 }),
+        });
+      }),
+    { scope: root },
+  );
 
   return (
-    <article className="yatra-detail">
+    <article className="yatra-detail" ref={root}>
       <header className="yatra-detail__head">
-        <div className="page">
+        <div className="page yatra-detail__head-grid">
+          <div className="yatra-detail__picture">
+            <CircuitPlate circuit={yatra.circuit} />
+          </div>
+          <div className="yatra-detail__intro">
           <p className="yatra-detail__back">
             <Link to={`/yatras?circuit=${yatra.circuit}`}>{CIRCUIT_INFO[yatra.circuit].name}</Link>
           </p>
           <h1 className="sign yatra-detail__title">{yatra.name}</h1>
           <p className="lede">{yatra.summary}</p>
+          </div>
 
           <dl className="yatra-detail__facts">
             <div>
@@ -120,6 +163,8 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
           </dl>
         </div>
       </header>
+
+      <RouteStrip yatra={yatra} />
 
       <div className="page grid yatra-detail__body">
         <div className="yatra-detail__plan">
@@ -196,6 +241,20 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
           )}
         </aside>
       </div>
+
+      {selected && !confirmation && (
+        <div className="yatra-detail__bar">
+          <p>
+            <strong>
+              {dateParts(selected.startDate).day} {dateParts(selected.startDate).monthYear}
+            </strong>
+            <span>{formatInr(selected.pricePaise)} per person</span>
+          </p>
+          <a className="button" href="#book">
+            Request seats
+          </a>
+        </div>
+      )}
     </article>
   );
 }

@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import { formatMonth } from '../../../shared/lib/format';
 import type { YatraFilters } from '../api/yatraGateway';
 import { hasFilters, LENGTH_OPTIONS, upcomingMonths } from '../model/filters';
-import { CIRCUIT_INFO, CIRCUITS, DIFFICULTIES, DIFFICULTY_INFO } from '../model/yatra';
+import { DIFFICULTIES, DIFFICULTY_INFO } from '../model/yatra';
 import './YatraFilterBar.css';
 
 type YatraFilterBarProps = {
@@ -29,18 +29,6 @@ export function YatraFilterBar({ filters, startCities, onChange, onClear }: Yatr
       aria-label="Filter yatras"
       onSubmit={(event) => event.preventDefault()}
     >
-      <label className="field">
-        <span className="field__label">Circuit</span>
-        <select className="field__control" value={filters.circuit ?? ''} onChange={set('circuit')}>
-          <option value="">All circuits</option>
-          {CIRCUITS.map((circuit) => (
-            <option key={circuit} value={circuit}>
-              {CIRCUIT_INFO[circuit].name}
-            </option>
-          ))}
-        </select>
-      </label>
-
       <label className="field">
         <span className="field__label">Leaving from</span>
         <select

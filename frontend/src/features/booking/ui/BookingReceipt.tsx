@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { formatDateRange, formatInr, plural } from '../../../shared/lib/format';
+import { gsap, useGSAP, withMotion } from '../../../shared/motion/gsap';
 import { Link } from '../../../shared/ui/Link';
 import { formatMobile, type BookingConfirmation } from '../model/booking';
 import './BookingReceipt.css';
@@ -17,8 +18,23 @@ export function BookingReceipt({ confirmation }: BookingReceiptProps) {
     headingRef.current?.focus();
   }, []);
 
+  const root = useRef<HTMLElement>(null);
+
+  // The receipt lands like a stamped slip, then its lines are filled in.
+  useGSAP(
+    () =>
+      withMotion(() => {
+        gsap
+          .timeline()
+          .from(root.current, { scale: 0.8, rotation: -4, opacity: 0, duration: 0.7, ease: 'back.out(1.8)' })
+          .from('.booking-receipt__reference', { scaleX: 0, transformOrigin: '0 50%', duration: 0.5, ease: 'power3.out' }, '-=0.2')
+          .from('.booking-receipt__details > div', { x: -16, opacity: 0, duration: 0.35, stagger: 0.06 }, '-=0.2');
+      }),
+    { scope: root },
+  );
+
   return (
-    <section className="booking-receipt" aria-labelledby="receipt-title">
+    <section className="booking-receipt" aria-labelledby="receipt-title" ref={root}>
       <h2 id="receipt-title" ref={headingRef} tabIndex={-1}>
         Booking request sent
       </h2>

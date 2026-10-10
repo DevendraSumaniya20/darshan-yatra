@@ -11,12 +11,6 @@ html {
   scroll-padding-top: var(--space-6);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
 body {
   margin: 0;
   background: var(--paper);
@@ -194,6 +188,12 @@ svg {
   background: var(--paper-edge);
   color: var(--ink-soft);
   cursor: not-allowed;
+}
+
+.button--large {
+  min-height: 3.25rem;
+  padding-inline: var(--space-6);
+  font-size: var(--step-1);
 }
 
 .button--plain {

@@ -1,42 +1,102 @@
 .circuit-list {
-  border-top: var(--rule) solid var(--red);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gutter);
 }
 
-.circuit-list__row {
-  row-gap: var(--space-2);
-  align-items: baseline;
-  padding-block: var(--space-5);
-  border-bottom: var(--rule) solid var(--red);
+.circuit-list__item {
+  display: grid;
+  /* Each plate's caption band is printed in a different ink. */
+  --band: var(--blue);
+  --band-text: var(--paper);
+  --band-accent: var(--yellow);
 }
 
-.circuit-list__row > * {
-  grid-column: 1 / -1;
+.circuit-list__item--jyotirlinga {
+  --band: var(--yellow);
+  --band-text: var(--ink);
+  --band-accent: var(--blue);
+}
+
+.circuit-list__item--gujarat-west {
+  --band: var(--red);
+  --band-text: var(--paper);
+  --band-accent: var(--yellow);
+}
+
+.circuit-list__item--south-india {
+  --band: var(--green);
+  --band-text: var(--paper);
+  --band-accent: var(--yellow);
+}
+
+.circuit-list__tile {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border: var(--frame) solid var(--ink);
+  border-radius: var(--corner);
+  background: var(--band);
+  color: var(--band-text);
+  text-decoration: none;
+}
+
+.circuit-list__tile:hover {
+  color: var(--band-text);
+}
+
+.circuit-list__picture {
+  display: block;
+  aspect-ratio: 400 / 260;
+  overflow: hidden;
+  border-bottom: var(--frame) solid var(--ink);
+}
+
+.circuit-list__art {
+  display: block;
+  height: 100%;
+}
+
+.circuit-list__picture .circuit-plate {
+  transition: scale 500ms var(--ease-out);
+}
+
+.circuit-list__tile:hover .circuit-plate {
+  scale: 1.05;
+}
+
+.circuit-list__caption {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  padding: var(--space-4) var(--space-5) var(--space-5);
 }
 
 .circuit-list__name {
+  color: var(--band-accent);
+  font-family: var(--font-sign);
   font-size: var(--step-3);
   line-height: 1.15;
 }
 
-.circuit-list__link a {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap);
+.circuit-list__places {
+  max-width: 52ch;
+}
+
+.circuit-list__count {
+  margin-top: var(--space-1);
   font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.circuit-list__tile:focus-visible {
+  outline-offset: 4px;
 }
 
 @media (min-width: 48rem) {
-  .circuit-list__name {
-    grid-column: 1 / span 5;
-  }
-
-  .circuit-list__places {
-    grid-column: 6 / span 5;
-  }
-
-  .circuit-list__link {
-    grid-column: 11 / span 2;
-    justify-self: end;
-    text-align: right;
+  .circuit-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
