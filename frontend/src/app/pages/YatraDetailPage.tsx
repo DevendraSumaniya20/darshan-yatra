@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import type { BookingConfirmation } from '../../features/booking/model/booking';
+import { BookingForm } from '../../features/booking/ui/BookingForm';
+import { BookingReceipt } from '../../features/booking/ui/BookingReceipt';
 import { useYatra } from '../../features/yatras/api/useYatras';
 import {
   altitudeLabel,
@@ -50,13 +53,24 @@ export function YatraDetailPage({ slug }: YatraDetailPageProps) {
     );
   }
 
-  return <YatraDetailView yatra={yatra.data} />;
+  return <YatraDetailView yatra={yatra.data} onSeatsChanged={yatra.reload} />;
 }
 
-function YatraDetailView({ yatra }: { yatra: YatraDetail }) {
+type YatraDetailViewProps = {
+  yatra: YatraDetail;
+  onSeatsChanged: () => void;
+};
+
+function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
   const { search } = useLocation();
   const requested = new URLSearchParams(search).get('departure');
   const [chosenId, setChosenId] = useState<string | null>(requested);
+  const [confirmation, setConfirmation] = useState<BookingConfirmation | null>(null);
+
+  function handleBooked(result: BookingConfirmation) {
+    setConfirmation(result);
+    onSeatsChanged();
+  }
 
   // Fall back to the first open date when nothing valid is chosen.
   const open = yatra.departures.filter((departure) => departure.seatsLeft > 0);
@@ -152,13 +166,34 @@ function YatraDetailView({ yatra }: { yatra: YatraDetail }) {
           </section>
         </div>
 
-        <aside className="yatra-detail__book" aria-labelledby="dates-title">
-          <h2 id="dates-title">Choose a departure</h2>
-          <DeparturePicker
-            departures={yatra.departures}
-            selectedId={selected?.id ?? null}
-            onSelect={setChosenId}
-          />
+        <aside className="yatra-detail__book" id="book">
+          {confirmation ? (
+            <BookingReceipt confirmation={confirmation} />
+          ) : (
+            <>
+              <h2>Choose a departure</h2>
+              <DeparturePicker
+                departures={yatra.departures}
+                selectedId={selected?.id ?? null}
+                onSelect={setChosenId}
+              />
+              {selected && (
+                <>
+                  <h2>Request your seats</h2>
+                  <BookingForm
+                    departure={selected}
+                    onBooked={handleBooked}
+                    onSeatsChanged={onSeatsChanged}
+                  />
+                </>
+              )}
+              {!selected && yatra.departures.length > 0 && (
+                <p className="yatra-detail__all-full">
+                  Every date listed is full. New dates are added here when they are fixed.
+                </p>
+              )}
+            </>
+          )}
         </aside>
       </div>
     </article>
