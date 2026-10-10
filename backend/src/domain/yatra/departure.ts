@@ -1,6 +1,7 @@
 import type { Brand } from '../shared/brand.ts';
 import type { IsoDate } from '../shared/iso-date.ts';
 import type { Paise } from '../shared/paise.ts';
+import { DepartureClosedError, SeatsUnavailableError } from './errors.ts';
 import type { YatraId } from './yatra.ts';
 
 export type DepartureId = Brand<string, 'DepartureId'>;
@@ -59,5 +60,19 @@ export class Departure {
   /** Bookings close the day before the group leaves. */
   isOpenOn(today: IsoDate): boolean {
     return this.startDate > today;
+  }
+
+  /** Returns the departure as it will be once `seats` more are held. Never overbooks. */
+  hold(seats: number, today: IsoDate): Departure {
+    if (!this.isOpenOn(today)) throw new DepartureClosedError();
+    if (seats > this.seatsLeft) throw new SeatsUnavailableError(this.seatsLeft);
+    return new Departure({
+      id: this.id,
+      yatraId: this.yatraId,
+      startDate: this.startDate,
+      seatsTotal: this.seatsTotal,
+      seatsBooked: this.seatsBooked + seats,
+      price: this.price,
+    });
   }
 }
