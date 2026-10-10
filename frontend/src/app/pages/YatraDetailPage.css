@@ -161,7 +161,8 @@
   margin-top: var(--space-4);
 }
 
-.yatra-detail__all-full {
+.yatra-detail__all-full,
+.yatra-detail__notice {
   padding: var(--space-4);
   border: var(--rule) solid var(--ink);
   background: var(--yellow-pale);

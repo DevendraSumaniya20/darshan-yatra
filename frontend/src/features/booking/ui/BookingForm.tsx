@@ -4,6 +4,7 @@ import { ApiError } from '../../../shared/lib/http';
 import { requestBooking } from '../api/bookingGateway';
 import {
   EMPTY_DRAFT,
+  MAX_TRAVELLERS,
   maxTravellers,
   validateBooking,
   type BookableDeparture,
@@ -15,7 +16,8 @@ import {
 import './BookingForm.css';
 
 type BookingFormProps = {
-  departure: BookableDeparture;
+  /** Null while the person has to choose a date again; what they typed is kept meanwhile. */
+  departure: BookableDeparture | null;
   onBooked: (confirmation: BookingConfirmation) => void;
   /** Called when the server says seats changed, so the page can show fresh numbers. */
   onSeatsChanged: () => void;
@@ -23,16 +25,30 @@ type BookingFormProps = {
 
 const FIELD_ORDER: BookingField[] = ['contactName', 'phone', 'email', 'note'];
 
+type Problem = { departureId: string | null; message: string };
+
+function travellersHint(departure: BookableDeparture | null): string {
+  if (departure === null) return 'Choose a date to see the seats left.';
+  if (departure.seatsLeft < 10) {
+    return `${plural(departure.seatsLeft, 'seat is', 'seats are')} left on this date.`;
+  }
+  return 'For more than 10 travellers, send a request and tell us in the note.';
+}
+
 export function BookingForm({ departure, onBooked, onSeatsChanged }: BookingFormProps) {
   const id = useId();
   const formRef = useRef<HTMLFormElement>(null);
   const [draft, setDraft] = useState<BookingDraft>(EMPTY_DRAFT);
   const [touched, setTouched] = useState<Partial<Record<BookingField, boolean>>>({});
   const [serverErrors, setServerErrors] = useState<BookingErrors>({});
-  const [problem, setProblem] = useState<string | null>(null);
+  const [problem, setProblem] = useState<Problem | null>(null);
   const [sending, setSending] = useState(false);
 
-  const limit = maxTravellers(departure);
+  const departureId = departure?.id ?? null;
+  // A problem is about the date it happened on; it is not shown against another one.
+  const shownProblem = problem?.departureId === departureId ? problem.message : null;
+
+  const limit = departure ? maxTravellers(departure) : MAX_TRAVELLERS;
   // A newly chosen departure may have fewer seats than the number already picked.
   const travellers = Math.min(draft.travellers, limit);
 
@@ -60,6 +76,10 @@ export function BookingForm({ departure, onBooked, onSeatsChanged }: BookingForm
       focusFirstInvalid(clientErrors);
       return;
     }
+    if (departure === null) {
+      setProblem({ departureId, message: 'Choose a departure date, then send your request.' });
+      return;
+    }
 
     setSending(true);
     try {
@@ -73,9 +93,9 @@ export function BookingForm({ departure, onBooked, onSeatsChanged }: BookingForm
       if (error.code === 'VALIDATION_FAILED') {
         setServerErrors(error.fields);
         focusFirstInvalid(error.fields);
-        setProblem('Please check the marked fields and send again.');
+        setProblem({ departureId, message: 'Please check the marked fields and send again.' });
       } else {
-        setProblem(error.message);
+        setProblem({ departureId, message: error.message });
         // Seats ran out or the date closed: show the current numbers.
         if (error.status === 409 || error.status === 404) onSeatsChanged();
       }
@@ -130,7 +150,9 @@ export function BookingForm({ departure, onBooked, onSeatsChanged }: BookingForm
   return (
     <form ref={formRef} className="booking-form" onSubmit={handleSubmit} noValidate>
       <p className="booking-form__dates">
-        {formatDateRange(departure.startDate, departure.endDate)}
+        {departure
+          ? formatDateRange(departure.startDate, departure.endDate)
+          : 'No departure date chosen'}
       </p>
 
       <div className="field">
@@ -152,9 +174,7 @@ export function BookingForm({ departure, onBooked, onSeatsChanged }: BookingForm
           ))}
         </select>
         <span className="field__hint" id={`${id}-travellers-hint`}>
-          {departure.seatsLeft < 10
-            ? `${plural(departure.seatsLeft, 'seat is', 'seats are')} left on this date.`
-            : 'For more than 10 travellers, send a request and tell us in the note.'}
+          {travellersHint(departure)}
         </span>
       </div>
 
@@ -192,18 +212,20 @@ export function BookingForm({ departure, onBooked, onSeatsChanged }: BookingForm
         )}
       </div>
 
-      <dl className="booking-form__total">
-        <div>
-          <dt>
-            {plural(travellers, 'traveller', 'travellers')} at {formatInr(departure.pricePaise)}
-          </dt>
-          <dd>{formatInr(departure.pricePaise * travellers)}</dd>
-        </div>
-      </dl>
+      {departure && (
+        <dl className="booking-form__total">
+          <div>
+            <dt>
+              {plural(travellers, 'traveller', 'travellers')} at {formatInr(departure.pricePaise)}
+            </dt>
+            <dd>{formatInr(departure.pricePaise * travellers)}</dd>
+          </div>
+        </dl>
+      )}
 
-      {problem && (
+      {shownProblem && (
         <p className="booking-form__problem" role="alert">
-          {problem}
+          {shownProblem}
         </p>
       )}
 
