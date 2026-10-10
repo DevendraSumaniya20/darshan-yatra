@@ -6,7 +6,13 @@ import type {
 import { isoDateFromUtc } from '../../../domain/shared/iso-date.ts';
 import { paise } from '../../../domain/shared/paise.ts';
 import { Departure, type DepartureId } from '../../../domain/yatra/departure.ts';
-import { isCircuit, isDifficulty, type Yatra, type YatraId } from '../../../domain/yatra/yatra.ts';
+import {
+  isCircuit,
+  isDifficulty,
+  type Yatra,
+  type YatraId,
+  type YatraPhoto,
+} from '../../../domain/yatra/yatra.ts';
 
 export function toYatra(row: YatraRow & { itinerary: ItineraryDayRow[] }): Yatra {
   if (!isCircuit(row.circuit)) throw new Error(`Yatra ${row.id} has unknown circuit "${row.circuit}"`);
@@ -30,6 +36,7 @@ export function toYatra(row: YatraRow & { itinerary: ItineraryDayRow[] }): Yatra
     seasonStartMonth: row.seasonStartMonth,
     seasonEndMonth: row.seasonEndMonth,
     places: toStringList(row.places),
+    photo: toPhoto(row),
     inclusions: toStringList(row.inclusions),
     exclusions: toStringList(row.exclusions),
     itinerary: row.itinerary
@@ -52,6 +59,15 @@ export function toDeparture(row: DepartureRow): Departure {
     seatsBooked: row.seatsBooked,
     price: paise(row.pricePaise),
   });
+}
+
+/** A photo is stored as four columns that are filled or empty together. */
+function toPhoto(row: YatraRow): YatraPhoto | null {
+  const { photoPath, photoAlt, photoCredit, photoSourceUrl } = row;
+  if (photoPath === null || photoAlt === null || photoCredit === null || photoSourceUrl === null) {
+    return null;
+  }
+  return { path: photoPath, alt: photoAlt, credit: photoCredit, sourceUrl: photoSourceUrl };
 }
 
 function toStringList(value: unknown): string[] {

@@ -6,6 +6,8 @@ import type { ItineraryDay, Yatra, YatraId } from '../../domain/yatra/yatra.ts';
 /**
  * Illustrative catalogue used by the in-memory data source and by `prisma/seed.ts`.
  * Place names, distances, altitudes and seasons are real; prices and dates are sample data.
+ * Photographs are from Wikimedia Commons under the licence named in each credit; the files
+ * are in `frontend/public/photos/`.
  */
 
 type SeedDeparture = { date: string; seats: number; booked: number; priceInr?: number };
@@ -26,6 +28,13 @@ const STANDARD_EXCLUSIONS = [
 const seed: readonly SeedYatra[] = [
   {
     slug: 'char-dham-from-haridwar',
+    photo: {
+      path: '/photos/char-dham-from-haridwar.jpg',
+      alt: 'Badrinath temple with its painted front, under the hills of the Alaknanda valley',
+      credit: 'Vishwanath Negi, CC BY 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Badrinath_Temple,_Uttarakhand_(Photo-_Vishwanath_Negi).jpg',
+    },
     name: 'Char Dham Yatra',
     circuit: 'char-dham-himalaya',
     summary:
@@ -70,6 +79,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'kedarnath-badrinath-from-haridwar',
+    photo: {
+      path: '/photos/kedarnath-badrinath-from-haridwar.jpg',
+      alt: 'Kedarnath temple in the monsoon, with green slopes and cloud behind it',
+      credit: 'Shivam Kumar 766, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Kedarnath_Temple_in_Rainy_season.jpg',
+    },
     name: 'Kedarnath and Badrinath',
     circuit: 'char-dham-himalaya',
     summary:
@@ -109,6 +125,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'vaishno-devi-from-jammu',
+    photo: {
+      path: '/photos/vaishno-devi-from-jammu.jpg',
+      alt: 'The white buildings of Vaishno Devi Bhawan on the side of the Trikuta hills',
+      credit: 'Devansh srivastav, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Vaisno_dev_bhawan.jpg',
+    },
     name: 'Vaishno Devi',
     circuit: 'char-dham-himalaya',
     summary:
@@ -145,6 +168,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'kashi-prayagraj-ayodhya',
+    photo: {
+      path: '/photos/kashi-prayagraj-ayodhya.jpg',
+      alt: 'Boats moored below the steps and umbrellas of Dashashwamedh Ghat in Varanasi',
+      credit: 'Sulagna Halder, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:DASHASHWAMEDH_GHAT,_VARANASI.jpg',
+    },
     name: 'Kashi, Prayagraj and Ayodhya',
     circuit: 'jyotirlinga',
     summary:
@@ -184,6 +214,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'mahakaleshwar-omkareshwar-from-indore',
+    photo: {
+      path: '/photos/mahakaleshwar-omkareshwar-from-indore.jpg',
+      alt: 'The Narmada at Omkareshwar, with the temple on the left bank and the footbridge beyond',
+      credit: 'Jean-Pierre Dalbéra, CC BY 2.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Le_fleuve_Narmada_%C3%A0_Omkareshwar_temple_Madhya_Pradesh_India.jpg',
+    },
     name: 'Mahakaleshwar and Omkareshwar',
     circuit: 'jyotirlinga',
     summary:
@@ -219,6 +256,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'maharashtra-jyotirlingas-from-pune',
+    photo: {
+      path: '/photos/maharashtra-jyotirlingas-from-pune.jpg',
+      alt: 'The black stone towers of Trimbakeshwar temple against a clear sky',
+      credit: 'Saket Verma, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Trimbakeshwar_Shiva_Temple_2005.jpg',
+    },
     name: 'Three jyotirlingas of Maharashtra',
     circuit: 'jyotirlinga',
     summary:
@@ -256,6 +300,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'dwarka-somnath-from-ahmedabad',
+    photo: {
+      path: '/photos/dwarka-somnath-from-ahmedabad.jpg',
+      alt: 'Dwarkadhish temple and the town of Dwarka seen across the Gomti',
+      credit: 'Kridha20, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Dwarkadhish_Temple_20.jpg',
+    },
     name: 'Dwarka and Somnath',
     circuit: 'gujarat-west',
     summary:
@@ -294,6 +345,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'ambaji-nathdwara-from-ahmedabad',
+    photo: {
+      path: '/photos/ambaji-nathdwara-from-ahmedabad.jpg',
+      alt: 'The carved stone front of the Arasuri Ambaji temple',
+      credit: 'Ms Sarah Welch, CC0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:0081323_Arasuri_Ambaji_mandir,_Shakti_Peeth,_north_Gujarat_011.jpg',
+    },
     name: 'Ambaji and Nathdwara',
     circuit: 'gujarat-west',
     summary:
@@ -328,6 +386,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'shirdi-shani-shingnapur-from-mumbai',
+    photo: {
+      path: '/photos/shirdi-shani-shingnapur-from-mumbai.jpg',
+      alt: 'The Shanidev temple at Shani Shingnapur',
+      credit: 'Shivashanky, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Shree_Shanidev_Temple,_Shani_Shingnapur.jpg',
+    },
     name: 'Shirdi and Shani Shingnapur',
     circuit: 'gujarat-west',
     summary:
@@ -361,6 +426,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'tirupati-from-chennai',
+    photo: {
+      path: '/photos/tirupati-from-chennai.jpg',
+      alt: 'The white gateway tower of the Tirumala temple, with the Seshachalam hills behind',
+      credit: 'Nikhilb239, CC BY-SA 4.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Tirumala_090615.jpg',
+    },
     name: 'Tirupati Balaji',
     circuit: 'south-india',
     summary:
@@ -395,6 +467,13 @@ const seed: readonly SeedYatra[] = [
   },
   {
     slug: 'madurai-rameswaram-kanyakumari',
+    photo: {
+      path: '/photos/madurai-rameswaram-kanyakumari.jpg',
+      alt: 'A painted gopuram of the Meenakshi Amman temple in Madurai',
+      credit: 'Supgiri, CC BY-SA 3.0',
+      sourceUrl:
+        'https://commons.wikimedia.org/wiki/File:Meenakshi_amman_temple.jpg',
+    },
     name: 'Madurai, Rameswaram and Kanyakumari',
     circuit: 'south-india',
     summary:

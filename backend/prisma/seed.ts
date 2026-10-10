@@ -31,6 +31,10 @@ async function main(): Promise<void> {
         places: [...yatra.places],
         inclusions: [...yatra.inclusions],
         exclusions: [...yatra.exclusions],
+        photoPath: yatra.photo?.path ?? null,
+        photoAlt: yatra.photo?.alt ?? null,
+        photoCredit: yatra.photo?.credit ?? null,
+        photoSourceUrl: yatra.photo?.sourceUrl ?? null,
       };
 
       await prisma.$transaction([

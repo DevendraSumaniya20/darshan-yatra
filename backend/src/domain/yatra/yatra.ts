@@ -17,6 +17,17 @@ export type ItineraryDay = {
   readonly overnight: string | null;
 };
 
+/** A photograph of a place on the route, with the credit its licence asks for. */
+export type YatraPhoto = {
+  /** Site-relative path of the image file. */
+  readonly path: string;
+  readonly alt: string;
+  /** Photographer and licence, as shown beside the picture. */
+  readonly credit: string;
+  /** Page where the photograph and its licence are published. */
+  readonly sourceUrl: string;
+};
+
 /** A pilgrimage tour as it appears in the catalogue. Dated runs of it are `Departure`s. */
 export type Yatra = {
   readonly id: YatraId;
@@ -37,6 +48,8 @@ export type Yatra = {
   readonly seasonStartMonth: number;
   readonly seasonEndMonth: number;
   readonly places: readonly string[];
+  /** Null until a photograph has been chosen; the site then shows its circuit picture. */
+  readonly photo: YatraPhoto | null;
   readonly inclusions: readonly string[];
   readonly exclusions: readonly string[];
   readonly itinerary: readonly ItineraryDay[];

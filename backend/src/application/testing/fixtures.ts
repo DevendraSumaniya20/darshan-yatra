@@ -36,6 +36,7 @@ export function aYatra(overrides: Partial<Yatra> & { slug: string }): Yatra {
     seasonStartMonth: 1,
     seasonEndMonth: 12,
     places: ['Ujjain'],
+    photo: null,
     inclusions: ['Hotel'],
     exclusions: ['Lunch'],
     itinerary: [{ day: 1, title: 'Arrive', description: 'Check in.', overnight: 'Ujjain' }],

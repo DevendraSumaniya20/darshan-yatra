@@ -1,6 +1,6 @@
 import { addDays } from '../../domain/shared/iso-date.ts';
 import type { Availability, Departure } from '../../domain/yatra/departure.ts';
-import type { Circuit, Difficulty, ItineraryDay, Yatra } from '../../domain/yatra/yatra.ts';
+import type { Circuit, Difficulty, ItineraryDay, Yatra, YatraPhoto } from '../../domain/yatra/yatra.ts';
 
 export type DepartureDto = {
   id: string;
@@ -25,6 +25,7 @@ export type YatraSummaryDto = {
   maxAltitudeM: number | null;
   walkingKm: number;
   places: readonly string[];
+  photo: YatraPhoto | null;
   seasonStartMonth: number;
   seasonEndMonth: number;
   /** Lowest price among upcoming departures, or the base price when none are scheduled. */
@@ -73,6 +74,7 @@ export function toYatraSummaryDto(yatra: Yatra, upcoming: readonly Departure[]):
     maxAltitudeM: yatra.maxAltitudeM,
     walkingKm: yatra.walkingKm,
     places: yatra.places,
+    photo: yatra.photo,
     seasonStartMonth: yatra.seasonStartMonth,
     seasonEndMonth: yatra.seasonEndMonth,
     fromPricePaise: fromPrice,

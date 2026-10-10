@@ -27,6 +27,10 @@ model Yatra {
   places           Json
   inclusions       Json
   exclusions       Json
+  photoPath        String? @db.VarChar(255)
+  photoAlt         String? @db.VarChar(255)
+  photoCredit      String? @db.VarChar(255)
+  photoSourceUrl   String? @db.VarChar(512)
 
   itinerary  ItineraryDay[]
   departures Departure[]
