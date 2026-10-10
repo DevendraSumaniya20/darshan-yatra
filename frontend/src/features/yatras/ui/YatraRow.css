@@ -1,0 +1,101 @@
+.yatra-row {
+  row-gap: var(--space-5);
+  padding-block: var(--space-6);
+  border-bottom: var(--rule) solid var(--red);
+}
+
+.yatra-row > * {
+  grid-column: 1 / -1;
+}
+
+.yatra-row__date {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: var(--space-2) var(--space-4);
+  align-items: start;
+}
+
+.yatra-row__date-label {
+  grid-column: 1 / -1;
+  font-size: var(--step--1);
+  font-weight: 650;
+}
+
+.yatra-row__seats {
+  font-weight: 700;
+  text-align: center;
+}
+
+.yatra-row__no-date {
+  grid-column: 1 / -1;
+  padding: var(--space-3);
+  border: var(--rule) dashed var(--ink-soft);
+  color: var(--ink-soft);
+}
+
+.yatra-row__main {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.yatra-row__name {
+  font-family: var(--font-sign);
+  font-size: var(--step-3);
+  font-stretch: 100%;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.yatra-row__name a {
+  text-decoration: none;
+}
+
+.yatra-row__name a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+.yatra-row__price {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  align-content: start;
+}
+
+.yatra-row__amount {
+  font-size: var(--step-3);
+  font-stretch: 80%;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.yatra-row__from,
+.yatra-row__per,
+.yatra-row__count {
+  color: var(--ink-soft);
+}
+
+.yatra-row__price .button {
+  margin-top: var(--space-2);
+}
+
+@media (min-width: 48rem) {
+  .yatra-row {
+    align-items: start;
+  }
+
+  .yatra-row__date {
+    grid-column: 1 / span 3;
+    grid-template-columns: 1fr;
+    max-width: 10.5rem;
+  }
+
+  .yatra-row__main {
+    grid-column: 4 / span 6;
+  }
+
+  .yatra-row__price {
+    grid-column: 10 / span 3;
+  }
+}

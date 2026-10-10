@@ -1,0 +1,24 @@
+.yatras-page {
+  padding-top: var(--space-7);
+}
+
+.yatras-page__title {
+  margin-bottom: var(--space-5);
+  font-size: var(--step-4);
+}
+
+.yatras-page__count {
+  min-height: 1.6em;
+  margin-top: var(--space-5);
+  max-width: none;
+  font-weight: 650;
+}
+
+.yatras-page__list {
+  margin-top: var(--space-2);
+  border-top: var(--rule) solid var(--red);
+}
+
+.yatras-page .status-message {
+  margin-top: var(--space-4);
+}
