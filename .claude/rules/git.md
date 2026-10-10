@@ -13,7 +13,13 @@
 
 ## Branches
 
-- `main` stays releasable. Work happens on `feat/<topic>`, `fix/<topic>`, or `chore/<topic>`.
+- `main` stays releasable. Nothing is committed to it directly.
+- One branch per feature, named `<type>/<area>-<feature>`:
+  - `type` is `feat`, `fix`, `chore`, or `docs`.
+  - `area` is `backend`, `frontend`, or `project` for repository-wide work.
+  - Examples: `feat/backend-yatra-catalogue`, `feat/frontend-booking-request`, `fix/backend-seat-count`.
+- A feature that spans both apps gets two branches, backend first. The frontend branch starts from the backend branch it depends on.
+- A branch holds one feature. Unrelated fixes found along the way go on their own branch.
 - Rebase onto `main` before opening a PR. No merge commits inside feature branches.
 
 ## Never commit
