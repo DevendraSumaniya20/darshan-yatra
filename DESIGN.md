@@ -105,7 +105,7 @@ The audience is often booking for older relatives on a phone, so text is large, 
 
 **Key Characteristics:**
 - The date sheet is the signature object. Departures are never shown as plain rows of text when a sheet fits.
-- Every page carries a picture plate: flat-ink illustrations of shrines, hills, ghats and sea, drawn in code from the same four inks.
+- Every page carries a picture. Each yatra has a photograph of a place on its route; circuits and the home hero are flat-ink illustrations of shrines, hills, ghats and sea, drawn in code from the same four inks.
 - Colour fills whole sections: yellow plates, an ultramarine wall for the date pad, a vermilion band for the booking steps.
 - Flat inks, square corners, ruled lines. No gradients, glass, or soft cards.
 - Sign lettering for names only; text face for everything functional.
@@ -162,9 +162,13 @@ Four print inks on white paper, used in large flat fields.
 
 A 74rem page with a fluid gutter of clamp(1rem, 4vw, 2rem). Every page uses the same grid: four columns on phones, twelve from 48rem. Header, content and footer share its edges.
 
-Breakpoints are 48rem (medium) and 64rem (wide). Phones stack; from 48rem list rows split into date, description and price; from 64rem the yatra page puts the plan in seven columns and departures with the booking form in four.
+Breakpoints are 48rem (medium) and 64rem (wide). Phones stack; yatra cards sit two across from 48rem and three across from 64rem; from 64rem the yatra page puts the plan in seven columns and departures with the booking form in four.
 
-Sections are separated by 4.5rem. Lists are divided by 2px vermilion rules rather than boxed. On phones the departure dates and booking form come before the day-by-day plan.
+Sections are separated by 4.5rem. Lists of text are divided by 2px vermilion rules rather than boxed; only yatra cards and picture tiles are framed.
+
+The home page runs picture, finder, date pad, place band, cards by leaving city, circuits, booking steps, and what to know before choosing.
+
+The catalogue page is laid out as a search, then one band per circuit, then questions. Circuit bands alternate between paper and pale yellow. With every circuit on the page each band shows one row of three cards and links to the rest; choosing a circuit shows all of its cards. On phones the departure dates and booking form come before the day-by-day plan.
 
 ## Elevation & Depth
 
@@ -178,7 +182,7 @@ The system is flat. The single depth device is the pad stack: a date sheet shows
 
 ## Shapes
 
-Corners are 2px everywhere, the slight softness of cut paper. Borders are 2px rules in ink, vermilion or ultramarine; the printed frame around the hero and the top of the footer use 6px. The only circles are itinerary day markers. Two cut-paper details recur: a row of perforations along the top of each date sheet, and a toran of small triangles along the lower edge of the header band.
+Corners are 2px everywhere, the slight softness of cut paper. Borders are 2px rules in ink, vermilion or ultramarine; the printed frame around the hero and the top of the footer use 6px, and yatra cards, circuit tabs and the search box use 3px. The only circles are itinerary day markers. Two cut-paper details recur: a row of perforations along the top of each date sheet, and a toran of small triangles along the lower edge of the header band.
 
 ## Components
 
@@ -194,16 +198,39 @@ Corners are 2px everywhere, the slight softness of cut paper. Borders are 2px ru
 - **Chosen state:** 3px ultramarine frame and a "Chosen" bar.
 - **Full state:** the sheet is torn off; a dashed stub with the date and "Full" remains.
 
+### Yatra card
+- **Anatomy:** the yatra's photograph with the length pinned to its corner as a ticket stub, the name in sign lettering, the places on the route, then the next departure as a small date sheet beside the facts people compare (leaving city, distance on foot, effort, other dates), and under a vermilion rule the price per person and one button.
+- **Frame:** 3px ink border, flat, no shadow. The date sheet inside is the only thing that casts one.
+- **Uses:** the catalogue page, grouped by circuit, and the home page, narrowed by leaving city.
+
+### Search
+- One large field with a 3px ink border and a primary button, labelled in words above. It is the largest control on the catalogue page. Place and yatra names are offered as suggestions while typing.
+
+### Questions
+- A list of native disclosure rows divided by vermilion rules, with a plus that becomes a minus when open. One answer is open at a time. Answers repeat only what the site already states elsewhere.
+
+### Finder
+- The counter under the home picture: place or yatra name, leaving city, month, and one primary button, on a pale-yellow band under a 6px vermilion rule. It opens the catalogue with those choices applied.
+
+### Leaving-city boards
+- A row of flat rectangular buttons, one per leaving city, above the home page cards. The chosen board is filled ultramarine and the line beneath states the choice in words. On phones the row swipes sideways.
+
 ### Fields
 - **Shape:** white, 2px ink border, 2px corners, 2.75rem tall. Label above, hint under the label, error under the control.
 - **Invalid:** vermilion border, pale-yellow fill, a message that says what to enter.
 - **Focus:** 3px ultramarine outline, 3px offset.
 
+### Photographs
+- **One per yatra:** a real photograph of a place on the route, shown on its card and at the head of its page. A yatra without one, or whose file fails to load, shows its circuit plate instead.
+- **Source and credit:** freely licensed photographs from Wikimedia Commons, stored in `frontend/public/photos/` at 960px wide. The path, alt text, photographer, licence and source page are part of the yatra data. The yatra page credits the photograph under the picture; lists of cards end with a "Photo credits" disclosure naming each one.
+- **Subject:** temple exteriors, ghats, hills and towns. No close views of deities or people at worship.
+- **Treatment:** cropped to the frame, no filter, tint or overlay. Frames are the same as for plates.
+
 ### Picture plates
 - **Panorama:** one horizon holding all four circuits, across the foot of the home hero.
-- **Circuit plates:** one scene per circuit (Himalaya on yellow, jyotirlingas on vermilion, the western coast on ultramarine, the south on pale yellow). Used on circuit tiles, circuit tabs, list entries and the yatra page head.
+- **Circuit plates:** one scene per circuit (Himalaya on yellow, jyotirlingas on vermilion, the western coast on ultramarine, the south on pale yellow). Used on circuit tiles and circuit tabs, and as the fallback where a yatra has no photograph.
 - **Drawing rules:** built only from the shapes in `features/yatras/ui/art/shapes.tsx` (spire, stone temple, gopuram, palm, pine, peaks, waves, ghats, boat), in token inks, with no outlines, gradients or shading. Plates are decorative and hidden from assistive technology; the place is always named in text beside them.
-- **Frame:** a 6px ink border on tiles and list entries; the vermilion and ultramarine double frame on the hero and yatra head.
+- **Frame:** a 6px ink border on tiles, 3px on yatra cards and circuit tabs; the vermilion and ultramarine double frame on the hero and yatra head.
 
 ### Notices
 - Pale-yellow panel with a 2px ink border for information; vermilion border for a problem. Always a heading, a sentence, and an action.
@@ -221,7 +248,7 @@ Motion is built with GSAP and ScrollTrigger; Lenis smooths wheel scrolling. All 
 - **Home entrance:** headline words drop in, the sun rises, then hills and shrines rise in turn; a boat drifts in and the water keeps moving.
 - **Date sheets:** swing to rest from the top edge with an elastic settle, wherever a pad first appears.
 - **Place band:** runs continuously and is pushed faster, in the scroll direction, while the page is scrolling.
-- **Plates and list entries:** rise into place once as they enter the view; plate art settles from a slight zoom.
+- **Plates and yatra cards:** rise into place once as they enter the view; plate art and the yatra page photograph settle from a slight zoom. The date sheet on a card swings to rest as the card lands.
 - **Itinerary:** the thread is drawn by scrolling and each day marker pops as the thread reaches it.
 - **Receipt:** lands like a stamped slip.
 
@@ -234,7 +261,7 @@ Motion is built with GSAP and ScrollTrigger; Lenis smooths wheel scrolling. All 
 - Put the date, seats left and price per person before any description.
 - Use rules to divide lists; keep panels for forms and notices.
 - State effort in numbers: kilometres on foot, metres of altitude.
-- Use tokens from `frontend/src/shared/styles/tokens.css`; add a token before adding a raw value.
+- Use tokens from `frontend/src/shared/styles/tokens.css`; add a token before adding a raw value. That file also loads the font files, so colours and fonts are changed in one place.
 
 **Don't**
 - Don't add gradients, blur, glow, or rounded soft-shadow cards.
@@ -242,5 +269,5 @@ Motion is built with GSAP and ScrollTrigger; Lenis smooths wheel scrolling. All 
 - Don't set sentences, labels or numbers in sign lettering.
 - Don't use all-caps, eyebrow labels above headings, or arrows after link text.
 - Don't number things that are not a sequence.
-- Don't invent photographs, testimonials, ratings or customer counts.
+- Don't use photographs that are not of the place named, or that lack a licence and credit. Don't invent testimonials, ratings or customer counts.
 - Don't depict deities or use sacred symbols as decoration.
