@@ -38,3 +38,16 @@ export function searchSuggestions(yatras: readonly YatraSummary[]): string[] {
   const names = yatras.flatMap((yatra) => [yatra.name, ...yatra.places]);
   return [...new Set(names)].sort((a, b) => a.localeCompare(b));
 }
+
+/** The cities yatras start from, for choosing where to leave from. */
+export function leavingCities(yatras: readonly YatraSummary[]): string[] {
+  return [...new Set(yatras.map((yatra) => yatra.startCity))].sort((a, b) => a.localeCompare(b));
+}
+
+/** Yatras ordered by their next departure; those with no date fixed come last. */
+export function soonestFirst(yatras: readonly YatraSummary[]): YatraSummary[] {
+  const NO_DATE = '9999-12-31';
+  return [...yatras].sort((a, b) =>
+    (a.nextDeparture?.startDate ?? NO_DATE).localeCompare(b.nextDeparture?.startDate ?? NO_DATE),
+  );
+}

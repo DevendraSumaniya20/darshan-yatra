@@ -65,6 +65,18 @@
   }
 }
 
+/* The counter under the picture, where a traveller says where and when. */
+.finder {
+  padding-block: var(--space-5);
+  border-top: var(--frame) solid var(--red);
+  background: var(--yellow-pale);
+}
+
+/* The circuits sit on the pale plate so the card rows above and the red band below stay apart. */
+.circuits {
+  background: var(--yellow-pale);
+}
+
 /* The date pad hangs on an ultramarine wall under the picture. */
 .leaving {
   padding-block: var(--space-7) var(--space-6);

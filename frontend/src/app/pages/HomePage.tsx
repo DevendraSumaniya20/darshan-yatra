@@ -1,10 +1,15 @@
 import { useRef } from 'react';
-import { NO_FILTERS } from '../../features/yatras/api/yatraGateway';
+import { NO_FILTERS, type YatraFilters } from '../../features/yatras/api/yatraGateway';
 import { useYatras } from '../../features/yatras/api/useYatras';
+import { leavingCities, searchSuggestions } from '../../features/yatras/model/catalogue';
+import { filtersToSearch } from '../../features/yatras/model/filters';
 import { Panorama } from '../../features/yatras/ui/art/Panorama';
 import { CircuitList } from '../../features/yatras/ui/CircuitList';
 import { NextDeparturesPad } from '../../features/yatras/ui/NextDeparturesPad';
 import { PlaceTicker } from '../../features/yatras/ui/PlaceTicker';
+import { YatraFinder } from '../../features/yatras/ui/YatraFinder';
+import { YatrasByCity } from '../../features/yatras/ui/YatrasByCity';
+import { navigate } from '../../shared/lib/router';
 import { gsap, useGSAP, withMotion } from '../../shared/motion/gsap';
 import { Link } from '../../shared/ui/Link';
 import { LoadingNotice, StatusMessage } from '../../shared/ui/StatusMessage';
@@ -15,6 +20,11 @@ const HEADLINE = ['Group', 'yatras', 'on', 'fixed', 'dates'];
 export function HomePage() {
   const yatras = useYatras(NO_FILTERS);
   const root = useRef<HTMLDivElement>(null);
+  const catalogue = yatras.data?.items ?? [];
+
+  function find(filters: YatraFilters, query: string) {
+    navigate(`/yatras${filtersToSearch(filters, query)}`);
+  }
 
   useGSAP(
     () =>
@@ -81,6 +91,16 @@ export function HomePage() {
         </div>
       </section>
 
+      <div className="finder">
+        <div className="page">
+          <YatraFinder
+            cities={leavingCities(catalogue)}
+            suggestions={searchSuggestions(catalogue)}
+            onFind={find}
+          />
+        </div>
+      </div>
+
       <section className="leaving" aria-labelledby="leaving-title">
         <div className="page">
           <div className="leaving__head">
@@ -111,11 +131,22 @@ export function HomePage() {
 
       <PlaceTicker />
 
-      <section className="section page" aria-labelledby="circuits-title">
-        <h2 id="circuits-title" className="section__title">
-          Four circuits
-        </h2>
-        <CircuitList yatras={yatras.data?.items ?? []} />
+      {catalogue.length > 0 && (
+        <section className="section page" aria-labelledby="by-city-title">
+          <h2 id="by-city-title" className="section__title">
+            Yatras by leaving city
+          </h2>
+          <YatrasByCity yatras={catalogue} />
+        </section>
+      )}
+
+      <section className="section circuits" aria-labelledby="circuits-title">
+        <div className="page">
+          <h2 id="circuits-title" className="section__title">
+            Four circuits
+          </h2>
+          <CircuitList yatras={catalogue} />
+        </div>
       </section>
 
       <section
