@@ -222,7 +222,8 @@ Corners are 2px everywhere, the slight softness of cut paper. Borders are 2px ru
 
 ### Photographs
 - **One per yatra:** a real photograph of a place on the route, shown on its card and at the head of its page. A yatra without one, or whose file fails to load, shows its circuit plate instead.
-- **Source and credit:** freely licensed photographs from Wikimedia Commons, stored in `frontend/public/photos/` at 960px wide. The path, alt text, photographer, licence and source page are part of the yatra data. The yatra page credits the photograph under the picture; lists of cards end with a "Photo credits" disclosure naming each one.
+- **Places on the route:** a yatra may also carry a gallery of further photographs, one per place, shown on its page as picture tiles under "Places on the route". Each tile has the same inked frame as a circuit tile, with the place name and the photo credit in the band below. A tile whose file fails to load is left out; a yatra with no gallery has no such section.
+- **Source and credit:** freely licensed photographs from Wikimedia Commons, stored by the API in `backend/media/photos/` at 960px wide and served under `/media`. Covers sit in that folder by yatra; photographs of single places sit in `places/` and are shared by the yatras that visit them. The path, alt text, caption, photographer, licence and source page are part of the yatra data. A cropped photograph says so in its credit. The yatra page credits the photograph under the picture; lists of cards end with a "Photo credits" disclosure naming each one.
 - **Subject:** temple exteriors, ghats, hills and towns. No close views of deities or people at worship.
 - **Treatment:** cropped to the frame, no filter, tint or overlay. Frames are the same as for plates.
 
@@ -248,7 +249,7 @@ Motion is built with GSAP and ScrollTrigger; Lenis smooths wheel scrolling. All 
 - **Home entrance:** headline words drop in, the sun rises, then hills and shrines rise in turn; a boat drifts in and the water keeps moving.
 - **Date sheets:** swing to rest from the top edge with an elastic settle, wherever a pad first appears.
 - **Place band:** runs continuously and is pushed faster, in the scroll direction, while the page is scrolling.
-- **Plates and yatra cards:** rise into place once as they enter the view; plate art and the yatra page photograph settle from a slight zoom. The date sheet on a card swings to rest as the card lands.
+- **Plates, picture tiles and yatra cards:** rise into place once as they enter the view; plate art and the yatra page photograph settle from a slight zoom. The date sheet on a card swings to rest as the card lands.
 - **Itinerary:** the thread is drawn by scrolling and each day marker pops as the thread reaches it.
 - **Receipt:** lands like a stamped slip.
 
