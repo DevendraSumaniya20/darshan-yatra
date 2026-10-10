@@ -39,3 +39,12 @@ paths:
 
 - Prefer the platform: `fetch`, `Intl`, `<dialog>`, `<details>`, native date inputs.
 - Adding a runtime dependency needs a reason that the platform cannot meet.
+- Approved for motion: `gsap` with `@gsap/react`, and `lenis` for smooth scrolling.
+
+## Motion
+
+- Import GSAP only from `shared/motion/gsap.ts`, which registers the plugins once.
+- Build animations inside `useGSAP` with a `scope` ref, wrapped in `withMotion`, so they are reverted on unmount and never run for people who ask for reduced motion.
+- Write the final state in CSS and animate *from* an offset. A page must be complete and readable if no animation ever runs.
+- Scroll effects use `ScrollTrigger`; do not add scroll listeners. Programmatic scrolling goes through `shared/motion/smoothScroll.ts`.
+- Animate `transform` and `opacity`. Do not animate layout properties.

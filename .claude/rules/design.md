@@ -27,7 +27,7 @@ These mark a page as machine-made and are banned unless a brief explicitly asks 
 - Arrows appended to link and button text.
 - Emoji as icons.
 - Hero made of a big number, a small label, and stat tiles.
-- Fade-and-slide-up on every section; hover lift on every card.
+- The same fade-and-slide-up on every section. Motion is authored per element: sheets swing, shrines rise, the thread draws.
 - Metadata strings joined with middle dots.
 
 ## Typography

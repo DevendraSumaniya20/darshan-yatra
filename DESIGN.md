@@ -105,6 +105,8 @@ The audience is often booking for older relatives on a phone, so text is large, 
 
 **Key Characteristics:**
 - The date sheet is the signature object. Departures are never shown as plain rows of text when a sheet fits.
+- Every page carries a picture plate: flat-ink illustrations of shrines, hills, ghats and sea, drawn in code from the same four inks.
+- Colour fills whole sections: yellow plates, an ultramarine wall for the date pad, a vermilion band for the booking steps.
 - Flat inks, square corners, ruled lines. No gradients, glass, or soft cards.
 - Sign lettering for names only; text face for everything functional.
 - One column grid shared by every page.
@@ -122,7 +124,7 @@ Four print inks on white paper, used in large flat fields.
 - **Ultramarine** (#1b2f8f): header and footer bands, sign lettering, links, the chosen-date frame, focus rings.
 
 ### Tertiary
-- **Bottle Green** (#0e6b3b): the frame of a sent booking receipt, and nothing else.
+- **Bottle Green** (#0e6b3b): palm fronds and the southern ground in the picture plates, the South India caption band, and the frame of a sent booking receipt.
 
 ### Neutral
 - **Ink** (#000000): all body text and control borders.
@@ -144,7 +146,7 @@ Four print inks on white paper, used in large flat fields.
 **Character:** Yatra One is hand-painted signboard lettering; it carries the names. Anek Latin does the work, and its width axis gives the condensed heavy numerals of a date pad without a third family. Both are self-hosted.
 
 ### Hierarchy
-- **Display** (400, clamp(2.5rem, 1.25rem + 6.2vw, 5.25rem), 1.04): page titles and yatra names in sign lettering, ultramarine with a three-step vermilion block shade.
+- **Display** (400, clamp(2.5rem, 1.25rem + 6.2vw, 5.25rem), 1.04): page titles and yatra names in sign lettering, ultramarine with a three-step vermilion block shade. The home headline alone goes one step larger, to clamp(3rem, 1rem + 9.5vw, 6rem).
 - **Headline** (750, width 85, 2.0625rem, 1.08): section headings.
 - **Title** (700, 1.3125rem, 1.3): sub-headings, itinerary day titles, key figures.
 - **Body** (400, 1.0625rem, 1.55): running text, capped at 66ch.
@@ -197,6 +199,12 @@ Corners are 2px everywhere, the slight softness of cut paper. Borders are 2px ru
 - **Invalid:** vermilion border, pale-yellow fill, a message that says what to enter.
 - **Focus:** 3px ultramarine outline, 3px offset.
 
+### Picture plates
+- **Panorama:** one horizon holding all four circuits, across the foot of the home hero.
+- **Circuit plates:** one scene per circuit (Himalaya on yellow, jyotirlingas on vermilion, the western coast on ultramarine, the south on pale yellow). Used on circuit tiles, circuit tabs, list entries and the yatra page head.
+- **Drawing rules:** built only from the shapes in `features/yatras/ui/art/shapes.tsx` (spire, stone temple, gopuram, palm, pine, peaks, waves, ghats, boat), in token inks, with no outlines, gradients or shading. Plates are decorative and hidden from assistive technology; the place is always named in text beside them.
+- **Frame:** a 6px ink border on tiles and list entries; the vermilion and ultramarine double frame on the hero and yatra head.
+
 ### Notices
 - Pale-yellow panel with a 2px ink border for information; vermilion border for a problem. Always a heading, a sentence, and an action.
 
@@ -205,6 +213,19 @@ Corners are 2px everywhere, the slight softness of cut paper. Borders are 2px ru
 
 ### Header and footer bands
 - Ultramarine with the name in yellow sign lettering and white links. The footer opens with a 6px vermilion rule and states that the catalogue is sample data.
+
+## Motion
+
+Motion is built with GSAP and ScrollTrigger; Lenis smooths wheel scrolling. All of it is skipped under `prefers-reduced-motion`, and every page is complete without it.
+
+- **Home entrance:** headline words drop in, the sun rises, then hills and shrines rise in turn; a boat drifts in and the water keeps moving.
+- **Date sheets:** swing to rest from the top edge with an elastic settle, wherever a pad first appears.
+- **Place band:** runs continuously and is pushed faster, in the scroll direction, while the page is scrolling.
+- **Plates and list entries:** rise into place once as they enter the view; plate art settles from a slight zoom.
+- **Itinerary:** the thread is drawn by scrolling and each day marker pops as the thread reaches it.
+- **Receipt:** lands like a stamped slip.
+
+**The Own-Gesture Rule.** Each kind of object has one motion that suits what it is. Do not give unrelated elements the same entrance.
 
 ## Do's and Don'ts
 
