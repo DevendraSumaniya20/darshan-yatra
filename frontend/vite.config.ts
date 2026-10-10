@@ -11,6 +11,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': apiUrl,
+      // Photographs are stored and served by the API.
+      '/media': apiUrl,
     },
   },
 })

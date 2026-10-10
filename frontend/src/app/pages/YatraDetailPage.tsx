@@ -12,6 +12,7 @@ import {
 } from '../../features/yatras/model/yatra';
 import { DeparturePicker } from '../../features/yatras/ui/DeparturePicker';
 import { Itinerary } from '../../features/yatras/ui/Itinerary';
+import { PlaceGallery } from '../../features/yatras/ui/PlaceGallery';
 import { RouteStrip } from '../../features/yatras/ui/RouteStrip';
 import { YatraPicture } from '../../features/yatras/ui/YatraPicture';
 import { dateParts, formatInr } from '../../shared/lib/format';
@@ -185,6 +186,15 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
               </p>
             )}
           </section>
+
+          {yatra.gallery.length > 0 && (
+            <section aria-labelledby="places-title">
+              <h2 id="places-title" className="section__title">
+                Places on the route
+              </h2>
+              <PlaceGallery photos={yatra.gallery} />
+            </section>
+          )}
 
           <section aria-labelledby="plan-title">
             <h2 id="plan-title" className="section__title">

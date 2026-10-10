@@ -26,6 +26,11 @@ export type YatraPhoto = {
   sourceUrl: string;
 };
 
+/** A photograph in a yatra's gallery, captioned with the place it shows. */
+export type GalleryPhoto = YatraPhoto & {
+  caption: string;
+};
+
 export type YatraSummary = {
   id: string;
   slug: string;
@@ -55,6 +60,7 @@ export type ItineraryDay = {
 };
 
 export type YatraDetail = YatraSummary & {
+  gallery: GalleryPhoto[];
   inclusions: string[];
   exclusions: string[];
   itinerary: ItineraryDay[];
