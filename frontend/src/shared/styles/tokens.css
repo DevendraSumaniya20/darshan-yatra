@@ -1,6 +1,11 @@
+/* The font files for the two families named in --font-sign and --font-text below. */
+@import '@fontsource/yatra-one/latin-400.css';
+@import '@fontsource-variable/anek-latin/wdth.css';
+
 /*
- * Design tokens. Components use these names; raw colours, font names and
- * spacing values do not appear anywhere else.
+ * Design tokens: the one file that sets the site's colours, fonts, sizes and
+ * spacing. Components use these names; raw colours, font names and spacing
+ * values do not appear anywhere else, so a change here restyles every page.
  *
  * Breakpoints (custom properties cannot be used in media queries):
  *   medium  48rem

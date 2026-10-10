@@ -1,5 +1,3 @@
-import '@fontsource/yatra-one/latin-400.css';
-import '@fontsource-variable/anek-latin/wdth.css';
 import './shared/styles/tokens.css';
 import './shared/styles/base.css';
 
