@@ -15,7 +15,7 @@ import { Itinerary } from '../../features/yatras/ui/Itinerary';
 import { PlaceGallery } from '../../features/yatras/ui/PlaceGallery';
 import { RouteStrip } from '../../features/yatras/ui/RouteStrip';
 import { YatraPicture } from '../../features/yatras/ui/YatraPicture';
-import { dateParts, formatInr } from '../../shared/lib/format';
+import { dateParts, formatInr, formatLongDate } from '../../shared/lib/format';
 import { useLocation } from '../../shared/lib/router';
 import { gsap, ScrollTrigger, useGSAP, withMotion } from '../../shared/motion/gsap';
 import { Link } from '../../shared/ui/Link';
@@ -76,9 +76,12 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
     onSeatsChanged();
   }
 
-  // Fall back to the first open date when nothing valid is chosen.
   const open = yatra.departures.filter((departure) => departure.seatsLeft > 0);
-  const selected = open.find((departure) => departure.id === chosenId) ?? open[0] ?? null;
+  const chosen = yatra.departures.find((departure) => departure.id === chosenId) ?? null;
+  // A chosen date that has filled is never swapped for another one: the person picks again.
+  const filled = chosen !== null && chosen.seatsLeft === 0 && open.length > 0 ? chosen : null;
+  // With nothing chosen yet, the first open date is offered.
+  const selected = filled ? null : (open.find((departure) => departure === chosen) ?? open[0] ?? null);
 
   const difficulty = DIFFICULTY_INFO[yatra.difficulty];
   const root = useRef<HTMLElement>(null);
@@ -239,7 +242,13 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
                 selectedId={selected?.id ?? null}
                 onSelect={setChosenId}
               />
-              {selected && (
+              {filled && (
+                <p className="yatra-detail__notice" role="alert">
+                  {formatLongDate(filled.startDate)} is now full. Choose another date above to
+                  send your request.
+                </p>
+              )}
+              {(selected || filled) && (
                 <>
                   <h2>Request your seats</h2>
                   <BookingForm
@@ -249,7 +258,7 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
                   />
                 </>
               )}
-              {!selected && yatra.departures.length > 0 && (
+              {open.length === 0 && yatra.departures.length > 0 && (
                 <p className="yatra-detail__all-full">
                   Every date listed is full. New dates are added here when they are fixed.
                 </p>
