@@ -96,6 +96,11 @@ a:hover {
   outline-offset: 3px;
 }
 
+/* The content region takes focus after navigation so reading starts there; it is not a control. */
+main:focus {
+  outline: none;
+}
+
 img,
 svg {
   display: block;

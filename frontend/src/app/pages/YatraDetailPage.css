@@ -1,0 +1,129 @@
+.yatra-detail__head {
+  padding-block: var(--space-6) var(--space-7);
+  border-bottom: var(--frame) solid var(--red);
+  background: var(--yellow);
+}
+
+.yatra-detail__back a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  font-weight: 700;
+}
+
+.yatra-detail__title {
+  margin-bottom: var(--space-4);
+  font-size: var(--step-5);
+  line-height: 1.06;
+}
+
+.yatra-detail__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--gutter);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: var(--rule) solid var(--blue);
+}
+
+.yatra-detail__facts dt {
+  font-size: var(--step--1);
+  font-weight: 650;
+}
+
+.yatra-detail__facts dd {
+  font-size: var(--step-1);
+  font-stretch: 85%;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+@media (min-width: 48rem) {
+  .yatra-detail__facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .yatra-detail__facts {
+    grid-template-columns: repeat(7, auto);
+    justify-content: space-between;
+  }
+}
+
+.yatra-detail__body {
+  row-gap: var(--space-7);
+  padding-top: var(--space-7);
+}
+
+.yatra-detail__body > * {
+  grid-column: 1 / -1;
+}
+
+.yatra-detail__plan {
+  display: grid;
+  gap: var(--space-8);
+  align-content: start;
+}
+
+.yatra-detail__effort {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  border: var(--rule) solid var(--ink);
+  border-radius: var(--corner);
+  background: var(--yellow-pale);
+}
+
+.yatra-detail__effort h2 {
+  font-size: var(--step-1);
+  font-stretch: 100%;
+  font-weight: 700;
+}
+
+.yatra-detail__lists {
+  display: grid;
+  gap: var(--space-6) var(--gutter);
+}
+
+.yatra-detail__lists h3 {
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--rule) solid var(--blue);
+}
+
+.yatra-detail__lists li {
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--paper-edge);
+}
+
+@media (min-width: 48rem) {
+  .yatra-detail__lists {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.yatra-detail__book {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+  /* On phones the dates come before the plan: they are what people came for. */
+  order: -1;
+}
+
+.yatra-detail__book > h2 {
+  font-size: var(--step-2);
+}
+
+@media (min-width: 64rem) {
+  .yatra-detail__plan {
+    grid-column: 1 / span 7;
+  }
+
+  .yatra-detail__book {
+    grid-column: 9 / span 4;
+    order: 0;
+    position: sticky;
+    top: var(--space-5);
+  }
+}

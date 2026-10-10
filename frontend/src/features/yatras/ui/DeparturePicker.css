@@ -1,0 +1,74 @@
+.departure-picker__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: var(--space-5) var(--space-4);
+  align-items: start;
+}
+
+.departure-picker__option {
+  display: grid;
+  cursor: pointer;
+  text-align: center;
+}
+
+.departure-picker__option .date-sheet {
+  transition:
+    translate var(--quick) var(--ease-out),
+    outline-color var(--quick) var(--ease-out);
+  outline: 3px solid transparent;
+  outline-offset: 3px;
+}
+
+.departure-picker__option:hover .date-sheet {
+  translate: 0 -2px;
+}
+
+.departure-picker__option input:checked + .date-sheet {
+  outline-color: var(--blue);
+}
+
+.departure-picker__option input:focus-visible + .date-sheet {
+  outline-color: var(--red);
+  outline-width: 4px;
+}
+
+.departure-picker__seats {
+  font-weight: 700;
+}
+
+/* Selection is shown by words as well as by the frame. */
+.departure-picker__chosen {
+  visibility: hidden;
+  margin-top: var(--space-1);
+  padding: 0 var(--space-2);
+  background: var(--blue);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.departure-picker__option input:checked + .date-sheet .departure-picker__chosen {
+  visibility: visible;
+}
+
+/* A full departure has been torn off the pad; only the stub is left. */
+.departure-picker__stub {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: var(--rule) dashed var(--ink-soft);
+  border-top: 0.875rem solid var(--blue);
+  border-radius: var(--corner);
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  text-align: center;
+}
+
+.departure-picker__full {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.departure-picker__empty {
+  padding: var(--space-4);
+  border: var(--rule) dashed var(--ink-soft);
+}

@@ -1,12 +1,20 @@
 import { useEffect, type ReactNode } from 'react';
 import { matchPath, useLocation } from '../shared/lib/router';
+import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { YatraDetailPage } from './pages/YatraDetailPage';
+import { YatrasPage } from './pages/YatrasPage';
 import { SiteFooter } from './SiteFooter';
 import { SiteHeader } from './SiteHeader';
 
 function resolvePage(pathname: string): ReactNode {
-  void matchPath;
-  void pathname;
+  if (pathname === '/') return <HomePage />;
+  if (pathname === '/yatras' || pathname === '/yatras/') return <YatrasPage />;
+
+  const detail = matchPath('/yatras/:slug', pathname);
+  // The key resets the chosen departure when moving between yatras.
+  if (detail?.slug) return <YatraDetailPage key={detail.slug} slug={detail.slug} />;
+
   return <NotFoundPage />;
 }
 

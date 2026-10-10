@@ -1,6 +1,6 @@
 /* The name band printed along the bottom of a trade calendar. */
 .site-footer {
-  margin-top: var(--space-9);
+  margin-top: var(--space-8);
   border-top: var(--frame) solid var(--red);
   background: var(--blue);
   color: var(--paper);
