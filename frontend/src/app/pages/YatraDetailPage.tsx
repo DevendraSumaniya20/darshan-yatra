@@ -10,10 +10,10 @@ import {
   seasonLabel,
   type YatraDetail,
 } from '../../features/yatras/model/yatra';
-import { CircuitPlate } from '../../features/yatras/ui/art/CircuitPlate';
 import { DeparturePicker } from '../../features/yatras/ui/DeparturePicker';
 import { Itinerary } from '../../features/yatras/ui/Itinerary';
 import { RouteStrip } from '../../features/yatras/ui/RouteStrip';
+import { YatraPicture } from '../../features/yatras/ui/YatraPicture';
 import { dateParts, formatInr } from '../../shared/lib/format';
 import { useLocation } from '../../shared/lib/router';
 import { gsap, ScrollTrigger, useGSAP, withMotion } from '../../shared/motion/gsap';
@@ -90,7 +90,7 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
           .from('.yatra-detail__title', { y: 40, opacity: 0, duration: 0.8 })
           .from('.yatra-detail__intro .lede', { y: 24, opacity: 0, duration: 0.6 }, '-=0.5')
           .from('.yatra-detail__picture', { clipPath: 'inset(0 100% 0 0)', duration: 1, ease: 'power4.inOut' }, 0.1)
-          .from('.yatra-detail__picture .circuit-plate', { scale: 1.35, duration: 1.6 }, 0.1)
+          .from('.yatra-detail__picture .yatra-picture', { scale: 1.35, duration: 1.6 }, 0.1)
           .from('.yatra-detail__facts > div', { y: 20, opacity: 0, duration: 0.5, stagger: 0.05 }, 0.5)
           .from('.route-strip__stops > li', { x: -24, opacity: 0, duration: 0.5, stagger: 0.07 }, 0.7)
           .from('.departure-picker__list > li', { y: -24, opacity: 0, rotation: -6, transformOrigin: '50% 0%', duration: 1, ease: 'elastic.out(1, 0.6)', stagger: 0.08 }, 0.8);
@@ -120,9 +120,16 @@ function YatraDetailView({ yatra, onSeatsChanged }: YatraDetailViewProps) {
     <article className="yatra-detail" ref={root}>
       <header className="yatra-detail__head">
         <div className="page yatra-detail__head-grid">
-          <div className="yatra-detail__picture">
-            <CircuitPlate circuit={yatra.circuit} />
-          </div>
+          <figure className="yatra-detail__figure">
+            <div className="yatra-detail__picture">
+              <YatraPicture yatra={yatra} eager />
+            </div>
+            {yatra.photo && (
+              <figcaption className="yatra-detail__credit">
+                Photo: <a href={yatra.photo.sourceUrl}>{yatra.photo.credit}</a>
+              </figcaption>
+            )}
+          </figure>
           <div className="yatra-detail__intro">
           <p className="yatra-detail__back">
             <Link to={`/yatras?circuit=${yatra.circuit}`}>{CIRCUIT_INFO[yatra.circuit].name}</Link>

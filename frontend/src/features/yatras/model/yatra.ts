@@ -18,6 +18,14 @@ export type Departure = {
   availability: Availability;
 };
 
+/** A photograph of a place on the route, with the credit its licence asks for. */
+export type YatraPhoto = {
+  path: string;
+  alt: string;
+  credit: string;
+  sourceUrl: string;
+};
+
 export type YatraSummary = {
   id: string;
   slug: string;
@@ -31,6 +39,7 @@ export type YatraSummary = {
   maxAltitudeM: number | null;
   walkingKm: number;
   places: string[];
+  photo: YatraPhoto | null;
   seasonStartMonth: number;
   seasonEndMonth: number;
   fromPricePaise: number;
