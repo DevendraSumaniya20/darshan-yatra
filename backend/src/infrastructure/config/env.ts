@@ -4,7 +4,7 @@ import { z } from 'zod';
 const schema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-    PORT: z.coerce.number().int().min(1).max(65535).default(4000),
+    PORT: z.coerce.number().int().min(1).max(65535).default(5000),
     CORS_ORIGIN: z.string().default('http://localhost:5173'),
     DATA_SOURCE: z.enum(['prisma', 'memory']).default('prisma'),
     DATABASE_URL: z.string().optional(),
