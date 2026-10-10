@@ -59,8 +59,28 @@ model Departure {
   seatsBooked Int      @default(0)
   pricePaise  Int
 
-  yatra Yatra @relation(fields: [yatraId], references: [id], onDelete: Cascade)
+  yatra    Yatra            @relation(fields: [yatraId], references: [id], onDelete: Cascade)
+  bookings BookingRequest[]
 
   @@index([yatraId, startDate])
   @@index([startDate])
+}
+
+model BookingRequest {
+  id          String   @id @db.VarChar(36)
+  reference   String   @unique @db.VarChar(12)
+  departureId String   @db.VarChar(128)
+  contactName String   @db.VarChar(120)
+  phone       String   @db.VarChar(16)
+  email       String?  @db.VarChar(190)
+  travellers  Int
+  note        String?  @db.Text
+  status      String   @default("pending") @db.VarChar(16)
+  totalPaise  Int
+  createdAt   DateTime @db.DateTime(3)
+
+  departure Departure @relation(fields: [departureId], references: [id], onDelete: Restrict)
+
+  @@index([departureId])
+  @@index([phone])
 }
