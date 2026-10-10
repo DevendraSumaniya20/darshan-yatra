@@ -1,0 +1,70 @@
+.next-pad {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) var(--space-4);
+}
+
+@media (min-width: 48rem) {
+  .next-pad {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+}
+
+.next-pad > li {
+  display: grid;
+}
+
+.next-pad__sheet {
+  display: grid;
+  color: var(--ink);
+  text-decoration: none;
+  transform-origin: 50% 0;
+}
+
+.next-pad__sheet:hover {
+  color: var(--ink);
+}
+
+.next-pad__sheet:hover .next-pad__name {
+  color: var(--red-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.next-pad__name {
+  color: var(--blue);
+  font-size: var(--step-1);
+  font-stretch: 85%;
+  font-weight: 750;
+  line-height: var(--leading-snug);
+}
+
+.next-pad__seats {
+  font-weight: 700;
+}
+
+.next-pad__empty {
+  padding: var(--space-5);
+  border: var(--rule) solid var(--ink);
+  background: var(--paper);
+}
+
+/* The one authored moment: the sheets swing to rest as the pad is hung. */
+@media (prefers-reduced-motion: no-preference) {
+  .next-pad__sheet {
+    animation: next-pad-settle 900ms var(--ease-out) backwards;
+    animation-delay: calc(var(--order) * 70ms);
+  }
+}
+
+@keyframes next-pad-settle {
+  from {
+    rotate: -5deg;
+    translate: 0 -0.5rem;
+  }
+  55% {
+    rotate: 1.2deg;
+  }
+}

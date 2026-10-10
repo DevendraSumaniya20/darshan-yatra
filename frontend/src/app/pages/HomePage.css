@@ -1,0 +1,113 @@
+/* The picture plate of the calendar: a yellow field inside a printed double frame. */
+.hero {
+  padding: var(--space-3);
+  background: var(--yellow);
+}
+
+.hero__plate {
+  padding-block: var(--space-7) var(--space-8);
+  border: var(--frame) solid var(--red);
+  outline: var(--rule) solid var(--blue);
+  outline-offset: calc(-1 * (var(--frame) + var(--space-2)));
+}
+
+.hero__top {
+  row-gap: var(--space-5);
+  align-items: end;
+}
+
+.hero__top > * {
+  grid-column: 1 / -1;
+}
+
+.hero__title {
+  font-size: var(--step-5);
+  line-height: 1.04;
+}
+
+.hero__intro {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+}
+
+.hero__pad-title {
+  margin-block: var(--space-7) var(--space-5);
+  font-size: var(--step-2);
+}
+
+@media (min-width: 64rem) {
+  .hero {
+    padding: var(--space-4);
+  }
+
+  .hero__title {
+    grid-column: 1 / span 8;
+  }
+
+  .hero__intro {
+    grid-column: 9 / span 4;
+    padding-bottom: var(--space-2);
+  }
+}
+
+/* A real sequence, so the steps are numbered: numerals borrowed from the date pad. */
+.how-it-works {
+  background: var(--yellow-pale);
+  border-block: var(--rule) solid var(--ink);
+}
+
+.how-it-works__steps {
+  counter-reset: step;
+  row-gap: var(--space-6);
+}
+
+.how-it-works__steps > li {
+  grid-column: 1 / -1;
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--space-4);
+  align-items: start;
+}
+
+.how-it-works__steps > li::before {
+  content: counter(step);
+  grid-row: span 2;
+  min-width: 1ch;
+  color: var(--red);
+  font-size: 4.5rem;
+  font-stretch: 75%;
+  font-weight: 800;
+  line-height: 0.85;
+}
+
+.how-it-works__steps h3 {
+  margin-bottom: var(--space-1);
+}
+
+@media (min-width: 48rem) {
+  .how-it-works__steps > li {
+    grid-column: span 4;
+  }
+}
+
+.before-you-choose {
+  row-gap: var(--space-6);
+}
+
+.before-you-choose > div {
+  grid-column: 1 / -1;
+  padding-top: var(--space-4);
+  border-top: var(--rule) solid var(--blue);
+}
+
+.before-you-choose h3 {
+  margin-bottom: var(--space-2);
+}
+
+@media (min-width: 48rem) {
+  .before-you-choose > div {
+    grid-column: span 4;
+  }
+}
