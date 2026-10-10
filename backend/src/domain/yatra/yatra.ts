@@ -28,6 +28,11 @@ export type YatraPhoto = {
   readonly sourceUrl: string;
 };
 
+/** A photograph in a yatra's gallery, captioned with the place it shows. */
+export type GalleryPhoto = YatraPhoto & {
+  readonly caption: string;
+};
+
 /** A pilgrimage tour as it appears in the catalogue. Dated runs of it are `Departure`s. */
 export type Yatra = {
   readonly id: YatraId;
@@ -50,6 +55,8 @@ export type Yatra = {
   readonly places: readonly string[];
   /** Null until a photograph has been chosen; the site then shows its circuit picture. */
   readonly photo: YatraPhoto | null;
+  /** Further photographs of places on the route, in the order they are shown. May be empty. */
+  readonly gallery: readonly GalleryPhoto[];
   readonly inclusions: readonly string[];
   readonly exclusions: readonly string[];
   readonly itinerary: readonly ItineraryDay[];

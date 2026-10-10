@@ -1,5 +1,6 @@
 import type {
   Departure as DepartureRow,
+  GalleryPhoto as GalleryPhotoRow,
   ItineraryDay as ItineraryDayRow,
   Yatra as YatraRow,
 } from '../../../../generated/prisma/client.ts';
@@ -14,7 +15,15 @@ import {
   type YatraPhoto,
 } from '../../../domain/yatra/yatra.ts';
 
-export function toYatra(row: YatraRow & { itinerary: ItineraryDayRow[] }): Yatra {
+/** The relations a yatra row must be loaded with before it can be mapped. */
+export const YATRA_INCLUDE = { itinerary: true, gallery: true } as const;
+
+type YatraRowWithRelations = YatraRow & {
+  itinerary: ItineraryDayRow[];
+  gallery: GalleryPhotoRow[];
+};
+
+export function toYatra(row: YatraRowWithRelations): Yatra {
   if (!isCircuit(row.circuit)) throw new Error(`Yatra ${row.id} has unknown circuit "${row.circuit}"`);
   if (!isDifficulty(row.difficulty)) {
     throw new Error(`Yatra ${row.id} has unknown difficulty "${row.difficulty}"`);
@@ -37,6 +46,15 @@ export function toYatra(row: YatraRow & { itinerary: ItineraryDayRow[] }): Yatra
     seasonEndMonth: row.seasonEndMonth,
     places: toStringList(row.places),
     photo: toPhoto(row),
+    gallery: row.gallery
+      .toSorted((a, b) => a.position - b.position)
+      .map((photo) => ({
+        path: photo.path,
+        alt: photo.alt,
+        caption: photo.caption,
+        credit: photo.credit,
+        sourceUrl: photo.sourceUrl,
+      })),
     inclusions: toStringList(row.inclusions),
     exclusions: toStringList(row.exclusions),
     itinerary: row.itinerary
@@ -61,7 +79,7 @@ export function toDeparture(row: DepartureRow): Departure {
   });
 }
 
-/** A photo is stored as four columns that are filled or empty together. */
+/** The cover photo is stored as four columns that are filled or empty together. */
 function toPhoto(row: YatraRow): YatraPhoto | null {
   const { photoPath, photoAlt, photoCredit, photoSourceUrl } = row;
   if (photoPath === null || photoAlt === null || photoCredit === null || photoSourceUrl === null) {

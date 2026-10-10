@@ -1,6 +1,13 @@
 import { addDays } from '../../domain/shared/iso-date.ts';
 import type { Availability, Departure } from '../../domain/yatra/departure.ts';
-import type { Circuit, Difficulty, ItineraryDay, Yatra, YatraPhoto } from '../../domain/yatra/yatra.ts';
+import type {
+  Circuit,
+  Difficulty,
+  GalleryPhoto,
+  ItineraryDay,
+  Yatra,
+  YatraPhoto,
+} from '../../domain/yatra/yatra.ts';
 
 export type DepartureDto = {
   id: string;
@@ -35,6 +42,7 @@ export type YatraSummaryDto = {
 };
 
 export type YatraDetailDto = YatraSummaryDto & {
+  gallery: readonly GalleryPhoto[];
   inclusions: readonly string[];
   exclusions: readonly string[];
   itinerary: readonly ItineraryDay[];

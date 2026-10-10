@@ -2,7 +2,7 @@ import type { Prisma } from '../../../../generated/prisma/client.ts';
 import { toUtcDate } from '../../../domain/shared/iso-date.ts';
 import type { Yatra, YatraId } from '../../../domain/yatra/yatra.ts';
 import type { Page, YatraFilter, YatraRepository } from '../../../domain/yatra/yatra-repository.ts';
-import { toYatra } from './mappers.ts';
+import { toYatra, YATRA_INCLUDE } from './mappers.ts';
 import type { PrismaClient } from './prisma-client.ts';
 
 export class PrismaYatraRepository implements YatraRepository {
@@ -32,7 +32,7 @@ export class PrismaYatraRepository implements YatraRepository {
     const [rows, total] = await this.prisma.$transaction([
       this.prisma.yatra.findMany({
         where,
-        include: { itinerary: true },
+        include: YATRA_INCLUDE,
         orderBy: { name: 'asc' },
         skip: (page.page - 1) * page.pageSize,
         take: page.pageSize,
@@ -44,12 +44,12 @@ export class PrismaYatraRepository implements YatraRepository {
   }
 
   async findBySlug(slug: string): Promise<Yatra | null> {
-    const row = await this.prisma.yatra.findUnique({ where: { slug }, include: { itinerary: true } });
+    const row = await this.prisma.yatra.findUnique({ where: { slug }, include: YATRA_INCLUDE });
     return row ? toYatra(row) : null;
   }
 
   async findById(id: YatraId): Promise<Yatra | null> {
-    const row = await this.prisma.yatra.findUnique({ where: { id }, include: { itinerary: true } });
+    const row = await this.prisma.yatra.findUnique({ where: { id }, include: YATRA_INCLUDE });
     return row ? toYatra(row) : null;
   }
 

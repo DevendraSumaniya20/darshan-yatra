@@ -1,3 +1,4 @@
+import path from 'node:path';
 import cors from 'cors';
 import express, { type Express } from 'express';
 import { errorHandler, notFoundHandler } from '../presentation/http/middleware/error-handler.ts';
@@ -14,6 +15,16 @@ export function createApp(container: Container): Express {
   app.use(requestId);
   app.use(cors({ origin: container.env.corsOrigin }));
   app.use(express.json({ limit: '32kb' }));
+
+  // Photographs are files, not API resources, so they sit outside /api/v1.
+  app.use(
+    '/media',
+    express.static(path.resolve(container.env.mediaDir), {
+      index: false,
+      dotfiles: 'ignore',
+      maxAge: '7d',
+    }),
+  );
 
   app.use('/api/v1', healthRouter());
   app.use('/api/v1', yatraRouter(container.controllers.yatras));

@@ -33,6 +33,7 @@ model Yatra {
   photoSourceUrl   String? @db.VarChar(512)
 
   itinerary  ItineraryDay[]
+  gallery    GalleryPhoto[]
   departures Departure[]
 
   createdAt DateTime @default(now()) @db.DateTime(3)
@@ -53,6 +54,21 @@ model ItineraryDay {
   yatra Yatra @relation(fields: [yatraId], references: [id], onDelete: Cascade)
 
   @@unique([yatraId, day])
+}
+
+model GalleryPhoto {
+  id        Int    @id @default(autoincrement())
+  yatraId   String @db.VarChar(96)
+  position  Int
+  path      String @db.VarChar(255)
+  alt       String @db.VarChar(255)
+  caption   String @db.VarChar(120)
+  credit    String @db.VarChar(255)
+  sourceUrl String @db.VarChar(512)
+
+  yatra Yatra @relation(fields: [yatraId], references: [id], onDelete: Cascade)
+
+  @@unique([yatraId, position])
 }
 
 model Departure {

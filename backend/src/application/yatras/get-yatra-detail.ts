@@ -23,6 +23,7 @@ export class GetYatraDetail {
 
     return {
       ...toYatraSummaryDto(yatra, upcoming),
+      gallery: yatra.gallery,
       inclusions: yatra.inclusions,
       exclusions: yatra.exclusions,
       itinerary: yatra.itinerary,

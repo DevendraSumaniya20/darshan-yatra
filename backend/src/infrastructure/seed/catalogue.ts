@@ -1,18 +1,25 @@
 import { isoDate } from '../../domain/shared/iso-date.ts';
 import { rupees } from '../../domain/shared/paise.ts';
 import type { DepartureId, DepartureProps } from '../../domain/yatra/departure.ts';
-import type { ItineraryDay, Yatra, YatraId } from '../../domain/yatra/yatra.ts';
+import type {
+  GalleryPhoto,
+  ItineraryDay,
+  Yatra,
+  YatraId,
+  YatraPhoto,
+} from '../../domain/yatra/yatra.ts';
 
 /**
  * Illustrative catalogue used by the in-memory data source and by `prisma/seed.ts`.
  * Place names, distances, altitudes and seasons are real; prices and dates are sample data.
  * Photographs are from Wikimedia Commons under the licence named in each credit; the files
- * are in `frontend/public/photos/`.
+ * are in `backend/media/photos/` and are served by the API under `/media`.
  */
 
 type SeedDeparture = { date: string; seats: number; booked: number; priceInr?: number };
 
-type SeedYatra = Omit<Yatra, 'id' | 'basePrice' | 'itinerary'> & {
+type SeedYatra = Omit<Yatra, 'id' | 'basePrice' | 'itinerary' | 'gallery'> & {
+  gallery?: readonly GalleryPhoto[];
   priceInr: number;
   days: ReadonlyArray<[title: string, description: string, overnight: string | null]>;
   departures: readonly SeedDeparture[];
@@ -25,11 +32,73 @@ const STANDARD_EXCLUSIONS = [
   'Travel insurance',
 ];
 
+/** Photographs of single places, shared by the yatras that visit them. */
+const PLACE_PHOTOS = {
+  dwarkadhish: {
+    path: '/media/photos/places/dwarkadhish-temple.jpg',
+    alt: 'The carved spire of Dwarkadhish temple with its flag flying from the top',
+    caption: 'Dwarkadhish temple, Dwarka',
+    credit: 'Madhuranthakan Jagadeesan, CC BY-SA 4.0',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:N-GJ-126_Dwarkadhish_Temple,_Dwarka_Flag_Hoisting.jpg',
+  },
+  gomtiSangam: {
+    path: '/media/photos/places/gomti-sangam.jpg',
+    alt: 'Samudra Narayan temple on the shore where the Gomti meets the Arabian Sea',
+    caption: 'Gomti Sangam, Dwarka',
+    credit: 'Soulful sunshine, CC BY-SA 4.0',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:Samudra_Narayan_Temple_in_Dwarka,_Gomti_Sangam_Ghat.jpg',
+  },
+  sudarshanSetu: {
+    path: '/media/photos/places/sudarshan-setu.jpg',
+    alt: 'The road deck and cable pylon of Sudarshan Setu under a cloudy sky',
+    caption: 'Sudarshan Setu to Bet Dwarka',
+    credit: 'AshishRajeshValanju, CC BY-SA 4.0, cropped',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Sudarshan_setu_dwarka_bet.jpg',
+  },
+  nageshwar: {
+    path: '/media/photos/places/nageshwar.jpg',
+    alt: 'The red domes and spire of Nageshwar temple',
+    caption: 'Nageshwar jyotirlinga',
+    credit: 'Kakarrote, CC BY-SA 4.0',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:Nageshwar_Jyotirling_Temple,_Dwarka,_Gujarat.jpg',
+  },
+  rukmini: {
+    path: '/media/photos/places/rukmini-devi-temple.jpg',
+    alt: 'Rukmini Devi temple standing alone on open ground outside Dwarka',
+    caption: 'Rukmini temple, Dwarka',
+    credit: 'Vinayaraj, CC BY-SA 4.0',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:Rukmini_Devi_Temple,_Dwarka_during_Dwaraka_DWARASPDB_2015_(70).jpg',
+  },
+  somnath: {
+    path: '/media/photos/places/somnath-temple.jpg',
+    alt: 'Somnath temple from the side, with the sea behind it',
+    caption: 'Somnath temple',
+    credit: 'B. SurajPatro1997, CC BY-SA 4.0',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Somanath_mandir_(cropped).jpg',
+  },
+  bhalkaTirth: {
+    path: '/media/photos/places/bhalka-tirth.jpg',
+    alt: 'The gateway of Bhalka Tirth temple with its name written in Hindi',
+    caption: 'Bhalka Tirth, Veraval',
+    credit: 'Manoj Khurana, CC BY-SA 4.0',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:BHALKA-06.jpg',
+  },
+} satisfies Record<string, GalleryPhoto>;
+
+/** A place photograph used as a yatra's cover, which carries no caption. */
+function asCover({ caption: _caption, ...photo }: GalleryPhoto): YatraPhoto {
+  return photo;
+}
+
 const seed: readonly SeedYatra[] = [
   {
     slug: 'char-dham-from-haridwar',
     photo: {
-      path: '/photos/char-dham-from-haridwar.jpg',
+      path: '/media/photos/char-dham-from-haridwar.jpg',
       alt: 'Badrinath temple with its painted front, under the hills of the Alaknanda valley',
       credit: 'Vishwanath Negi, CC BY 4.0',
       sourceUrl:
@@ -80,7 +149,7 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'kedarnath-badrinath-from-haridwar',
     photo: {
-      path: '/photos/kedarnath-badrinath-from-haridwar.jpg',
+      path: '/media/photos/kedarnath-badrinath-from-haridwar.jpg',
       alt: 'Kedarnath temple in the monsoon, with green slopes and cloud behind it',
       credit: 'Shivam Kumar 766, CC BY-SA 4.0',
       sourceUrl:
@@ -126,7 +195,7 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'vaishno-devi-from-jammu',
     photo: {
-      path: '/photos/vaishno-devi-from-jammu.jpg',
+      path: '/media/photos/vaishno-devi-from-jammu.jpg',
       alt: 'The white buildings of Vaishno Devi Bhawan on the side of the Trikuta hills',
       credit: 'Devansh srivastav, CC BY-SA 4.0',
       sourceUrl:
@@ -169,7 +238,7 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'kashi-prayagraj-ayodhya',
     photo: {
-      path: '/photos/kashi-prayagraj-ayodhya.jpg',
+      path: '/media/photos/kashi-prayagraj-ayodhya.jpg',
       alt: 'Boats moored below the steps and umbrellas of Dashashwamedh Ghat in Varanasi',
       credit: 'Sulagna Halder, CC BY-SA 4.0',
       sourceUrl:
@@ -215,7 +284,7 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'mahakaleshwar-omkareshwar-from-indore',
     photo: {
-      path: '/photos/mahakaleshwar-omkareshwar-from-indore.jpg',
+      path: '/media/photos/mahakaleshwar-omkareshwar-from-indore.jpg',
       alt: 'The Narmada at Omkareshwar, with the temple on the left bank and the footbridge beyond',
       credit: 'Jean-Pierre Dalbéra, CC BY 2.0',
       sourceUrl:
@@ -257,7 +326,7 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'maharashtra-jyotirlingas-from-pune',
     photo: {
-      path: '/photos/maharashtra-jyotirlingas-from-pune.jpg',
+      path: '/media/photos/maharashtra-jyotirlingas-from-pune.jpg',
       alt: 'The black stone towers of Trimbakeshwar temple against a clear sky',
       credit: 'Saket Verma, CC BY-SA 4.0',
       sourceUrl:
@@ -301,12 +370,20 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'dwarka-somnath-from-ahmedabad',
     photo: {
-      path: '/photos/dwarka-somnath-from-ahmedabad.jpg',
+      path: '/media/photos/dwarka-somnath-from-ahmedabad.jpg',
       alt: 'Dwarkadhish temple and the town of Dwarka seen across the Gomti',
       credit: 'Kridha20, CC BY-SA 4.0',
       sourceUrl:
         'https://commons.wikimedia.org/wiki/File:Dwarkadhish_Temple_20.jpg',
     },
+    gallery: [
+      PLACE_PHOTOS.dwarkadhish,
+      PLACE_PHOTOS.sudarshanSetu,
+      PLACE_PHOTOS.nageshwar,
+      PLACE_PHOTOS.rukmini,
+      PLACE_PHOTOS.somnath,
+      PLACE_PHOTOS.bhalkaTirth,
+    ],
     name: 'Dwarka and Somnath',
     circuit: 'gujarat-west',
     summary:
@@ -332,7 +409,7 @@ const seed: readonly SeedYatra[] = [
     days: [
       ['Ahmedabad to Dwarka', 'A long road day of about 440 km through Rajkot and Jamnagar. Evening aarti at Dwarkadhish temple.', 'Dwarka'],
       ['Bet Dwarka and Nageshwar', 'Cross the Sudarshan Setu to Bet Dwarka, then Nageshwar jyotirlinga, Gopi Talav and Rukmini temple.', 'Dwarka'],
-      ['Dwarka to Somnath', 'Drive 230 km down the coast, stopping at Kirti Mandir in Porbandar. Evening aarti and the light show at Somnath.', 'Somnath'],
+      ['Dwarka to Somnath', 'Drive about 235 km down the coast, stopping at Kirti Mandir in Porbandar. Evening aarti and the light show at Somnath.', 'Somnath'],
       ['Somnath and Bhalka Tirth', 'Morning darshan, then Triveni Sangam, Bhalka Tirth and Gita Mandir. Afternoon at leisure by the sea.', 'Somnath'],
       ['Somnath to Ahmedabad', 'Drive 410 km back through Junagadh, reaching Ahmedabad in the evening.', null],
     ],
@@ -344,9 +421,51 @@ const seed: readonly SeedYatra[] = [
     ],
   },
   {
+    slug: 'dwarka-from-ahmedabad',
+    photo: asCover(PLACE_PHOTOS.dwarkadhish),
+    gallery: [
+      PLACE_PHOTOS.gomtiSangam,
+      PLACE_PHOTOS.sudarshanSetu,
+      PLACE_PHOTOS.nageshwar,
+      PLACE_PHOTOS.rukmini,
+    ],
+    name: 'Dwarka and Bet Dwarka',
+    circuit: 'gujarat-west',
+    summary:
+      'Three days from Ahmedabad for Dwarkadhish, Bet Dwarka across the Sudarshan Setu, and Nageshwar jyotirlinga.',
+    durationDays: 3,
+    startCity: 'Ahmedabad',
+    endCity: 'Ahmedabad',
+    difficulty: 'easy',
+    maxAltitudeM: null,
+    walkingKm: 5,
+    priceInr: 8900,
+    seasonStartMonth: 10,
+    seasonEndMonth: 3,
+    places: ['Dwarkadhish', 'Gomti Ghat', 'Bet Dwarka', 'Nageshwar', 'Rukmini temple'],
+    inclusions: [
+      'Two nights in a hotel in Dwarka, twin sharing',
+      'Breakfast and dinner every day',
+      'Air-conditioned coach for the full route',
+      'Tour manager travelling with the group',
+    ],
+    exclusions: STANDARD_EXCLUSIONS,
+    days: [
+      ['Ahmedabad to Dwarka', 'A long road day of about 440 km through Rajkot and Jamnagar. Evening aarti at Dwarkadhish temple.', 'Dwarka'],
+      ['Bet Dwarka and Nageshwar', 'Drive 30 km to Okha and cross the Sudarshan Setu to Bet Dwarka. On the way back, Nageshwar jyotirlinga, Gopi Talav and Rukmini temple.', 'Dwarka'],
+      ['Dwarka to Ahmedabad', 'Morning darshan at Dwarkadhish temple and a walk along Gomti Ghat to the Samudra Narayan temple, then the 440 km drive back, reaching Ahmedabad at night.', null],
+    ],
+    departures: [
+      { date: '2026-11-20', seats: 30, booked: 12 },
+      { date: '2026-12-18', seats: 30, booked: 6 },
+      { date: '2027-01-22', seats: 30, booked: 0 },
+      { date: '2027-02-19', seats: 30, booked: 0 },
+    ],
+  },
+  {
     slug: 'ambaji-nathdwara-from-ahmedabad',
     photo: {
-      path: '/photos/ambaji-nathdwara-from-ahmedabad.jpg',
+      path: '/media/photos/ambaji-nathdwara-from-ahmedabad.jpg',
       alt: 'The carved stone front of the Arasuri Ambaji temple',
       credit: 'Ms Sarah Welch, CC0',
       sourceUrl:
@@ -387,7 +506,7 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'shirdi-shani-shingnapur-from-mumbai',
     photo: {
-      path: '/photos/shirdi-shani-shingnapur-from-mumbai.jpg',
+      path: '/media/photos/shirdi-shani-shingnapur-from-mumbai.jpg',
       alt: 'The Shanidev temple at Shani Shingnapur',
       credit: 'Shivashanky, CC BY-SA 4.0',
       sourceUrl:
@@ -427,7 +546,7 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'tirupati-from-chennai',
     photo: {
-      path: '/photos/tirupati-from-chennai.jpg',
+      path: '/media/photos/tirupati-from-chennai.jpg',
       alt: 'The white gateway tower of the Tirumala temple, with the Seshachalam hills behind',
       credit: 'Nikhilb239, CC BY-SA 4.0',
       sourceUrl:
@@ -468,7 +587,7 @@ const seed: readonly SeedYatra[] = [
   {
     slug: 'madurai-rameswaram-kanyakumari',
     photo: {
-      path: '/photos/madurai-rameswaram-kanyakumari.jpg',
+      path: '/media/photos/madurai-rameswaram-kanyakumari.jpg',
       alt: 'A painted gopuram of the Meenakshi Amman temple in Madurai',
       credit: 'Supgiri, CC BY-SA 3.0',
       sourceUrl:
@@ -522,8 +641,9 @@ function toItinerary(days: SeedYatra['days']): ItineraryDay[] {
 }
 
 export const seedYatras: readonly Yatra[] = seed.map(
-  ({ priceInr, days, departures: _departures, ...rest }) => ({
+  ({ priceInr, days, departures: _departures, gallery, ...rest }) => ({
     ...rest,
+    gallery: gallery ?? [],
     id: `yatra-${rest.slug}` as YatraId,
     basePrice: rupees(priceInr),
     itinerary: toItinerary(days),

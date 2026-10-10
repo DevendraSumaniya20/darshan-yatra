@@ -128,6 +128,31 @@ describe('GetYatraDetail', () => {
     assert.deepEqual(detail.departures.map((d) => d.startDate), ['2026-11-20', '2026-12-25']);
   });
 
+  it('returns the gallery photographs in the order they were stored', async () => {
+    const photo = (place: string) => ({
+      path: `/media/photos/places/${place}.jpg`,
+      alt: `A view of ${place}`,
+      caption: place,
+      credit: 'A. Photographer, CC BY-SA 4.0',
+      sourceUrl: `https://example.org/${place}`,
+    });
+    const dwarka = aYatra({ slug: 'dwarka', gallery: [photo('gomti-ghat'), photo('bet-dwarka')] });
+    const { getYatraDetail } = setup([dwarka], []);
+
+    const detail = await getYatraDetail.execute('dwarka');
+
+    assert.deepEqual(
+      detail.gallery.map((item) => item.caption),
+      ['gomti-ghat', 'bet-dwarka'],
+    );
+  });
+
+  it('returns an empty gallery for a yatra with no extra photographs', async () => {
+    const { getYatraDetail } = setup([ujjain], []);
+
+    assert.deepEqual((await getYatraDetail.execute('ujjain')).gallery, []);
+  });
+
   it('rejects an unknown slug', async () => {
     const { getYatraDetail } = setup([ujjain], []);
 

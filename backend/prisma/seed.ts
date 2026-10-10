@@ -4,8 +4,8 @@ import { createPrismaClient } from '../src/infrastructure/repositories/prisma/pr
 import { seedDepartures, seedYatras } from '../src/infrastructure/seed/catalogue.ts';
 
 /**
- * Loads the sample catalogue. Safe to run again: yatras and itineraries are replaced,
- * while existing departures keep their booked seats.
+ * Loads the sample catalogue. Safe to run again: yatras, itineraries and galleries are
+ * replaced, while existing departures keep their booked seats.
  */
 async function main(): Promise<void> {
   const env = loadEnv();
@@ -46,6 +46,14 @@ async function main(): Promise<void> {
         prisma.itineraryDay.deleteMany({ where: { yatraId: yatra.id } }),
         prisma.itineraryDay.createMany({
           data: yatra.itinerary.map((day) => ({ yatraId: yatra.id, ...day })),
+        }),
+        prisma.galleryPhoto.deleteMany({ where: { yatraId: yatra.id } }),
+        prisma.galleryPhoto.createMany({
+          data: yatra.gallery.map((photo, index) => ({
+            yatraId: yatra.id,
+            position: index + 1,
+            ...photo,
+          })),
         }),
       ]);
     }

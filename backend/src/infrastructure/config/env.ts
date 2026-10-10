@@ -8,6 +8,7 @@ const schema = z
     CORS_ORIGIN: z.string().default('http://localhost:5173'),
     DATA_SOURCE: z.enum(['prisma', 'memory']).default('prisma'),
     DATABASE_URL: z.string().optional(),
+    MEDIA_DIR: z.string().min(1).default('media'),
   })
   .refine((env) => env.DATA_SOURCE === 'memory' || Boolean(env.DATABASE_URL), {
     path: ['DATABASE_URL'],
@@ -20,6 +21,8 @@ export type Env = {
   corsOrigin: string;
   dataSource: 'prisma' | 'memory';
   databaseUrl: string | null;
+  /** Folder holding the photographs served under `/media`. Relative paths start at the working directory. */
+  mediaDir: string;
 };
 
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
@@ -37,5 +40,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     corsOrigin: env.CORS_ORIGIN,
     dataSource: env.DATA_SOURCE,
     databaseUrl: env.DATABASE_URL ?? null,
+    mediaDir: env.MEDIA_DIR,
   };
 }
