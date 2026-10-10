@@ -6,7 +6,7 @@
 
 .yatras-page__head > .page {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
 /* Lets the picture tabs scroll sideways instead of widening the page. */
@@ -19,15 +19,26 @@
   line-height: 1.06;
 }
 
+.yatras-page__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding-block: var(--space-5);
+}
+
+.yatras-page__status > .status-message,
+.yatras-page__status > .loading-notice {
+  flex: 1 1 100%;
+}
+
 .yatras-page__count {
   min-height: 1.6em;
-  margin-block: var(--space-6) var(--space-4);
   max-width: none;
   font-size: var(--step-1);
   font-weight: 700;
 }
 
-.yatras-page__list {
-  display: grid;
-  gap: var(--space-6);
+.yatras-page__circuits:empty {
+  display: none;
 }

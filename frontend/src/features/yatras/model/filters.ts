@@ -20,15 +20,21 @@ export function filtersFromSearch(search: string): YatraFilters {
   };
 }
 
-export function filtersToSearch(filters: YatraFilters): string {
+/** The words typed into the catalogue search, kept in the address beside the filters. */
+export function queryFromSearch(search: string): string {
+  return new URLSearchParams(search).get('q')?.trim() ?? '';
+}
+
+export function filtersToSearch(filters: YatraFilters, query = ''): string {
   const params = new URLSearchParams();
+  if (query) params.set('q', query);
   if (filters.circuit) params.set('circuit', filters.circuit);
   if (filters.startCity) params.set('startCity', filters.startCity);
   if (filters.month) params.set('month', filters.month);
   if (filters.difficulty) params.set('difficulty', filters.difficulty);
   if (filters.maxDays) params.set('maxDays', String(filters.maxDays));
-  const query = params.toString();
-  return query ? `?${query}` : '';
+  const search = params.toString();
+  return search ? `?${search}` : '';
 }
 
 export function hasFilters(filters: YatraFilters): boolean {

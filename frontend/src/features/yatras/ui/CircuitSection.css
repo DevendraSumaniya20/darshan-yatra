@@ -1,0 +1,63 @@
+.circuit-section {
+  padding-block: var(--space-7);
+}
+
+/* The first band follows the count line, which already gives it room above. */
+.circuit-section:first-child {
+  padding-top: var(--space-4);
+}
+
+/* Bands alternate between pad paper and the pale plate so each circuit reads as its own page. */
+.circuit-section:nth-child(even) {
+  background: var(--yellow-pale);
+}
+
+.circuit-section__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2) var(--space-5);
+  align-items: baseline;
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--rule) solid var(--red);
+}
+
+.circuit-section__title {
+  font-size: var(--step-4);
+  line-height: 1.1;
+}
+
+.circuit-section__count {
+  font-size: var(--step-1);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.circuit-section__places {
+  grid-column: 1 / -1;
+}
+
+.circuit-section__cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gutter);
+}
+
+.circuit-section__more {
+  display: flex;
+  justify-content: center;
+  max-width: none;
+  margin-top: var(--space-6);
+}
+
+@media (min-width: 48rem) {
+  .circuit-section__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .circuit-section__cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

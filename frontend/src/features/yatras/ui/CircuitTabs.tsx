@@ -8,10 +8,11 @@ import './CircuitTabs.css';
 
 type CircuitTabsProps = {
   filters: YatraFilters;
+  query: string;
 };
 
-/** Picture links for choosing a circuit; the other filters are kept. */
-export function CircuitTabs({ filters }: CircuitTabsProps) {
+/** Picture links for choosing a circuit; the search and the other filters are kept. */
+export function CircuitTabs({ filters, query }: CircuitTabsProps) {
   const nav = useRef<HTMLElement>(null);
 
   // On phones the tabs scroll sideways; keep the current one in view.
@@ -21,7 +22,8 @@ export function CircuitTabs({ filters }: CircuitTabsProps) {
       ?.scrollIntoView({ block: 'nearest', inline: 'center' });
   }, [filters.circuit]);
 
-  const hrefFor = (circuit: Circuit | null) => `/yatras${filtersToSearch({ ...filters, circuit })}`;
+  const hrefFor = (circuit: Circuit | null) =>
+    `/yatras${filtersToSearch({ ...filters, circuit }, query)}`;
 
   return (
     <nav className="circuit-tabs" aria-label="Circuits" ref={nav}>

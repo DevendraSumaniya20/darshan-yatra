@@ -64,6 +64,8 @@
   --corner: 2px;
   --rule: 2px;
   --frame: 6px;
+  /* Frames on small plates and cards, where the full frame would crowd the picture. */
+  --frame-thin: 3px;
   /* The lower edges of the sheets still on the pad. */
   --pad-stack:
     0 3px 0 -1px var(--paper), 0 3px 0 0 var(--paper-edge), 0 6px 0 -1px var(--paper),
