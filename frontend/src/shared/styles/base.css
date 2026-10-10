@@ -1,0 +1,253 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+  scrollbar-color: var(--blue) var(--yellow-pale);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: var(--space-6);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--step-0);
+  line-height: var(--leading-body);
+  font-variant-numeric: tabular-nums;
+  caret-color: var(--red);
+}
+
+::selection {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+dl,
+dd,
+fieldset,
+legend {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+fieldset {
+  border: 0;
+  min-width: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: var(--step-3);
+  font-stretch: 85%;
+  font-weight: 750;
+}
+
+h3 {
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+}
+
+p {
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--blue);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--red-deep);
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Sign-painter lettering: a solid face with a block shade cut down and to the right. */
+.sign {
+  font-family: var(--font-sign);
+  font-weight: 400;
+  color: var(--blue);
+  text-shadow:
+    0.02em 0.02em 0 var(--red),
+    0.04em 0.04em 0 var(--red),
+    0.06em 0.06em 0 var(--red);
+}
+
+.page {
+  width: 100%;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* One column grid shared by every page, so edges line up from header to footer. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+@media (min-width: 48rem) {
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+.section {
+  padding-block: var(--space-8);
+}
+
+.section__title {
+  margin-bottom: var(--space-5);
+}
+
+.lede {
+  font-size: var(--step-1);
+  line-height: var(--leading-snug);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Buttons */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  padding: var(--space-2) var(--space-5);
+  border: var(--rule) solid var(--red-deep);
+  border-radius: var(--corner);
+  background: var(--red);
+  color: var(--paper);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--quick) var(--ease-out);
+}
+
+.button:hover {
+  background: var(--red-deep);
+  color: var(--paper);
+}
+
+.button:active {
+  translate: 0 1px;
+}
+
+.button[aria-disabled='true'],
+.button:disabled {
+  border-color: var(--paper-edge);
+  background: var(--paper-edge);
+  color: var(--ink-soft);
+  cursor: not-allowed;
+}
+
+.button--plain {
+  border-color: var(--blue);
+  background: var(--paper);
+  color: var(--blue);
+}
+
+.button--plain:hover {
+  background: var(--blue);
+  color: var(--paper);
+}
+
+/* Form controls */
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.field__label {
+  font-weight: 650;
+}
+
+.field__hint {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.field__control {
+  width: 100%;
+  min-height: var(--tap);
+  padding: var(--space-2) var(--space-3);
+  border: var(--rule) solid var(--ink);
+  border-radius: var(--corner);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+.field__control::placeholder {
+  color: var(--ink-soft);
+}
+
+.field__control[aria-invalid='true'] {
+  border-color: var(--red);
+  background: var(--yellow-pale);
+}
+
+.field__error {
+  color: var(--red-deep);
+  font-size: var(--step--1);
+  font-weight: 650;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

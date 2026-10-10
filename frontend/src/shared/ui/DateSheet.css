@@ -1,0 +1,68 @@
+.date-sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--corner);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--pad-stack);
+}
+
+/* The stapled strip that holds the pad, with its row of perforations. */
+.date-sheet::before {
+  content: '';
+  display: block;
+  height: 0.875rem;
+  border-radius: var(--corner) var(--corner) 0 0;
+  background:
+    radial-gradient(circle at center, var(--yellow) 0 2px, transparent 2.5px) center / 0.875rem
+      100% repeat-x,
+    var(--blue);
+}
+
+.date-sheet__date {
+  display: grid;
+  justify-items: center;
+  padding-bottom: var(--space-3);
+  text-align: center;
+}
+
+.date-sheet__month {
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  background: var(--red);
+  color: var(--paper);
+  font-weight: 700;
+  font-stretch: 85%;
+  letter-spacing: 0.02em;
+}
+
+.date-sheet__day {
+  color: var(--red);
+  font-size: 5.5rem;
+  font-stretch: 75%;
+  font-weight: 800;
+  line-height: 0.95;
+  padding-top: var(--space-2);
+}
+
+.date-sheet__weekday {
+  font-weight: 650;
+}
+
+.date-sheet__body {
+  flex: 1;
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-3) var(--space-4);
+  border-top: var(--rule) dashed var(--paper-edge);
+}
+
+.date-sheet--small .date-sheet__day {
+  font-size: 3.5rem;
+}
+
+.date-sheet--small .date-sheet__date {
+  padding-bottom: var(--space-2);
+}

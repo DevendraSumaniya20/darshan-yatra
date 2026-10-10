@@ -1,0 +1,29 @@
+.status-message {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  padding: var(--space-5);
+  border: var(--rule) solid var(--ink);
+  border-radius: var(--corner);
+  background: var(--yellow-pale);
+}
+
+.status-message--problem {
+  border-color: var(--red);
+}
+
+.status-message__title {
+  font-size: var(--step-1);
+  font-stretch: 100%;
+  font-weight: 700;
+}
+
+.status-message__action {
+  margin-top: var(--space-2);
+}
+
+.loading-notice {
+  padding-block: var(--space-7);
+  color: var(--ink-soft);
+  font-size: var(--step-1);
+}
